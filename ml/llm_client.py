@@ -10,7 +10,7 @@ if not API_KEY:
     raise ValueError("GROQ_API_KEY not found. Add it to ml/.env")
 
 client = Groq(api_key=API_KEY)
-MODEL_NAME = "llama-3.3-70b-versatile"  # free, fast, strong for this use case
+MODEL_NAME = "openai/gpt-oss-120b"  # free, fast, strong for this use case
 
 
 def call_llm_json(prompt: str) -> dict:
