@@ -1,0 +1,51 @@
+Product id,name,brand,category,barcode,description,ingredients,materials,price,rating
+P0001,HydraGlow Facial Cleanser,AuraSkin,Skincare,890100000007,Gentle daily cleanser for normal and dry skin,Aloe Vera; Glycerin; Green Tea Extract; Panthenol,PET Bottle,12.99,4.5
+P0002,Vitamin C Brightening Serum,GlowLab,Skincare,890100000014,Lightweight serum designed to improve skin brightness,Vitamin C; Hyaluronic Acid; Vitamin E; Ferulic Acid,Glass Bottle,24.99,4.7
+P0003,Daily Moisture Cream,DermaPure,Skincare,890100000021,Hydrating face cream for everyday use,Shea Butter; Glycerin; Ceramides; Squalane,PP Jar,18.5,4.4
+P0004,Ultra Repair Lotion,SkinNature,Body Care,890100000038,Fast-absorbing body lotion for dry skin,Aloe Vera; Shea Butter; Coconut Oil; Vitamin E,HDPE Bottle,15.75,4.3
+P0005,Refreshing Face Mist,BloomCare,Skincare,890100000045,Refreshing facial mist suitable for use throughout the day,Rose Water; Aloe Vera; Glycerin; Chamomile Extract,PET Spray Bottle,9.99,4.2
+P0006,Matte Finish Foundation,ColorMuse,Makeup,890100000052,Buildable foundation providing a natural matte finish,Titanium Dioxide; Dimethicone; Glycerin; Iron Oxides,Glass Bottle,21.99,4.6
+P0007,Hydrating Lip Balm,BeautyNest,Lip Care,890100000069,Moisturizing lip balm with a smooth non-sticky finish,Beeswax; Shea Butter; Coconut Oil; Vitamin E,Paper Tube; Beeswax,6.49,4.5
+P0008,Herbal Shampoo,GreenRoots,Hair Care,890100000076,Mild shampoo formulated for regular hair washing,Aloe Vera; Rosemary Extract; Coconut Oil; Glycerin,HDPE Bottle,11.99,4.1
+P0009,Repair Conditioner,HairBloom,Hair Care,890100000083,Conditioner designed to soften and detangle damaged hair,Argan Oil; Shea Butter; Keratin; Aloe Vera,HDPE Bottle,13.49,4.4
+P0010,SPF 50 Sunscreen,SunGuard,Sun Care,890100000090,Broad-spectrum sunscreen with lightweight skin feel,Zinc Oxide; Vitamin E; Aloe Vera; Glycerin,HDPE Tube,17.99,4.6
+P0011,Overnight Renewal Serum,LumiCare,Skincare,890100000106,Night serum formulated to support smoother-looking skin,Retinol; Hyaluronic Acid; Peptides; Squalane,Amber Glass Bottle,29.99,4.7
+P0012,Charcoal Detox Mask,PureEarth,Skincare,890100000113,Wash-off clay mask for a refreshed complexion,Activated Charcoal; Kaolin Clay; Aloe Vera; Tea Tree Oil,PP Jar,14.25,4.3
+P0013,Soft Touch Hand Cream,VelvetSkin,Hand Care,890100000120,Rich hand cream for dry and rough hands,Shea Butter; Glycerin; Jojoba Oil; Vitamin E,Aluminum Tube,7.99,4.2
+P0014,Daily Face Wash,FreshDerm,Skincare,890100000137,Foaming facial wash for normal and combination skin,Glycerin; Green Tea; Chamomile; Panthenol,PET Bottle,10.49,4.3
+P0015,Hydrating Eye Gel,EyeGlow,Eye Care,890100000144,Cooling eye gel for a refreshed appearance,Caffeine; Hyaluronic Acid; Aloe Vera; Peptides,Glass Jar,19.99,4.5
+P0016,Silky Body Butter,NatureGlow,Body Care,890100000151,Rich body butter for intensive skin moisturization,Cocoa Butter; Shea Butter; Coconut Oil; Vitamin E,PP Jar,16.99,4.6
+P0017,Volumizing Hair Mask,SilkHair,Hair Care,890100000168,Deep-conditioning mask for dry and flat hair,Keratin; Argan Oil; Shea Butter; Panthenol,PP Jar,18.99,4.4
+P0018,Nourishing Hair Oil,HerbalEssence,Hair Care,890100000175,Lightweight botanical oil for hair nourishment,Argan Oil; Jojoba Oil; Coconut Oil; Rosemary Oil,Glass Dropper Bottle,14.99,4.5
+P0019,Liquid Eyeliner,MakeupPro,Makeup,890100000182,Long-lasting liquid eyeliner with precision applicator,Water; Carbon Black; Acrylates Copolymer; Glycerin,Plastic Pen,10.99,4.1
+P0020,Velvet Matte Lipstick,LipLuxe,Makeup,890100000199,Highly pigmented lipstick with a soft matte finish,Castor Oil; Beeswax; Vitamin E; Iron Oxides,Aluminum; Plastic,12.99,4.6
+P0021,Hydrating Primer,FacePerfect,Makeup,890100000205,Smooth makeup primer that helps create an even base,Dimethicone; Glycerin; Niacinamide; Hyaluronic Acid,Plastic Tube,16.99,4.4
+P0022,Lengthening Mascara,LashBloom,Makeup,890100000212,Buildable mascara for longer and fuller-looking lashes,Beeswax; Carnauba Wax; Iron Oxides; Panthenol,Plastic Tube,13.99,4.3
+P0023,Pressed Powder,BeautyCraft,Makeup,890100000229,Lightweight pressed powder for controlling facial shine,Talc; Mica; Zinc Oxide; Iron Oxides,Plastic Compact,11.49,4.2
+P0024,Peptide Firming Cream,AgeDefy,Skincare,890100000236,Firming moisturizer with a blend of peptides,Peptides; Ceramides; Shea Butter; Hyaluronic Acid,Glass Jar,32.99,4.8
+P0025,Niacinamide Serum,SkinScience,Skincare,890100000243,Daily serum formulated for balanced and smoother-looking skin,Niacinamide; Zinc PCA; Glycerin; Hyaluronic Acid,Glass Dropper Bottle,20.99,4.7
+P0026,Soothing Aloe Gel,CalmSkin,Skincare,890100000250,Cooling aloe gel for face and body,Aloe Vera; Glycerin; Panthenol; Allantoin,PET Tube,8.99,4.4
+P0027,Exfoliating Body Scrub,SpaNature,Body Care,890100000267,Gentle body scrub that removes surface impurities,Sugar; Coconut Oil; Shea Butter; Vitamin E,Glass Jar,13.99,4.3
+P0028,Tea Tree Spot Gel,ClearSkin,Skincare,890100000274,Targeted gel for blemish-prone skin,Tea Tree Oil; Salicylic Acid; Aloe Vera; Niacinamide,Plastic Tube,9.49,4.2
+P0029,Micellar Cleansing Water,CleanBeauty,Skincare,890100000281,Gentle micellar water for removing makeup and impurities,Micellar Water; Glycerin; Aloe Vera; Panthenol,PET Bottle,12.49,4.5
+P0030,Hydrating Sheet Mask,KBeautyCo,Skincare,890100000298,Single-use sheet mask for an instant hydration boost,Hyaluronic Acid; Aloe Vera; Glycerin; Green Tea,Cotton Sheet; Plastic Pouch,4.99,4.4
+P0031,Anti-Frizz Hair Serum,HairScience,Hair Care,890100000304,Lightweight serum that helps smooth frizzy hair,Argan Oil; Silicone; Vitamin E; Jojoba Oil,Glass Bottle,15.49,4.3
+P0032,Color Protect Shampoo,ColorCare,Hair Care,890100000311,Shampoo formulated for color-treated hair,Keratin; Argan Oil; Aloe Vera; Panthenol,HDPE Bottle,12.99,4.2
+P0033,Deep Moisture Conditioner,SoftLocks,Hair Care,890100000328,Rich conditioner for dry and brittle hair,Shea Butter; Coconut Oil; Keratin; Glycerin,HDPE Bottle,13.99,4.4
+P0034,Scalp Refresh Tonic,RootCare,Hair Care,890100000335,Refreshing scalp tonic for daily hair-care routines,Peppermint Oil; Rosemary Extract; Niacinamide; Glycerin,Glass Spray Bottle,17.49,4.1
+P0035,Hydrating Foundation,TrueTone,Makeup,890100000342,Medium-coverage foundation with a dewy finish,Glycerin; Hyaluronic Acid; Titanium Dioxide; Iron Oxides,Glass Bottle,22.49,4.5
+P0036,Soft Blush Powder,CheekGlow,Makeup,890100000359,Blendable powder blush for a natural-looking flush,Mica; Talc; Iron Oxides; Dimethicone,Plastic Compact,10.99,4.3
+P0037,Glow Highlighter,ShineStudio,Makeup,890100000366,Fine-milled highlighter for a luminous finish,Mica; Titanium Dioxide; Jojoba Oil; Dimethicone,Plastic Compact,14.49,4.6
+P0038,Waterproof Kajal,EyesFirst,Makeup,890100000373,Smooth waterproof eye pencil for long-lasting definition,Carbon Black; Wax; Vitamin E; Mineral Oil,Wood Pencil; Plastic Cap,8.99,4.2
+P0039,Cooling Foot Cream,FootCarePlus,Foot Care,890100000380,Cooling moisturizer for tired and dry feet,Menthol; Shea Butter; Glycerin; Peppermint Oil,Plastic Tube,9.99,4.1
+P0040,Intensive Heel Balm,SoftStep,Foot Care,890100000397,Rich balm for dry and rough heels,Urea; Shea Butter; Beeswax; Coconut Oil,Plastic Tube,11.99,4.4
+P0041,Hand Sanitizing Gel,CleanHands,Personal Care,890100000403,Quick-drying hand cleansing gel,Ethyl Alcohol; Glycerin; Aloe Vera; Carbomer,PET Bottle,5.99,4
+P0042,Moisturizing Body Wash,FreshBody,Body Care,890100000410,Gentle body wash with a creamy moisturizing formula,Glycerin; Aloe Vera; Coconut Oil; Vitamin E,HDPE Bottle,9.49,4.3
+P0043,Beard Oil,ManCave,Men's Grooming,890100000427,Premium high-quality beard oil formulated for daily use.,Jojoba Oil; Argan Oil,Glass Bottle,14.99,4.5
+P0044,Exfoliating Face Scrub,GlowLab,Skincare,890100000434,Premium high-quality exfoliating face scrub formulated for daily use.,Apricot Kernel; Aloe Vera,Tube,11.25,4.3
+P0045,Setting Spray,ColorMuse,Makeup,890100000441,Premium high-quality setting spray formulated for daily use.,Water; Polymer; Niacinamide,Spray Bottle,15.99,4.6
+P0046,Clarifying Toner,DermaPure,Skincare,890100000458,Premium high-quality clarifying toner formulated for daily use.,Salicylic Acid; Witch Hazel,PET Bottle,13.5,4.4
+P0047,Vitamin E Body Oil,SkinNature,Body Care,890100000465,Premium high-quality vitamin e body oil formulated for daily use.,Vitamin E; Almond Oil,Glass Bottle,18,4.5
+P0048,Curl Defining Cream,HairBloom,Hair Care,890100000472,Premium high-quality curl defining cream formulated for daily use.,Shea Butter; Coconut Oil,PP Jar,16.49,4.2
+P0049,Brightening Eye Cream,LumiCare,Eye Care,890100000489,Premium high-quality brightening eye cream formulated for daily use.,Vitamin C; Caffeine,Small Tube,22,4.7
+P0050,Tinted Lip Oil,LipLuxe,Lip Care,890100000496,Premium high-quality tinted lip oil formulated for daily use.,Jojoba Oil; Vitamin E,Vial,11.99,4.5
