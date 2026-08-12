@@ -13,12 +13,15 @@ import {
 } from 'lucide-react';
 import SearchBar from '../common/SearchBar';
 import { useAuth } from '../../context/AuthContext';
+import { useComparison } from '../../context/ComparisonContext';
+import { ArrowRightLeft } from 'lucide-react';
 import './Navbar.css';
 
 export default function Navbar({ onToggleSidebar, sidebarOpen }) {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
+  const { compareItems } = useComparison();
 
   const handleLogout = () => {
     logout();
@@ -51,6 +54,12 @@ export default function Navbar({ onToggleSidebar, sidebarOpen }) {
       </div>
 
       <div className="navbar-right">
+        <Link to="/compare" className="btn btn-ghost btn-icon navbar-compare-btn" title="Compare products">
+          <ArrowRightLeft size={20} />
+          {compareItems.length > 0 && (
+            <span className="navbar-badge">{compareItems.length}</span>
+          )}
+        </Link>
         <Link to="/scanner" className="btn btn-ghost btn-icon mobile-scan-btn" title="Scan barcode">
           <ScanBarcode size={20} />
         </Link>
