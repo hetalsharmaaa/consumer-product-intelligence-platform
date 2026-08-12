@@ -9,18 +9,11 @@ import {
   LogIn,
   ShoppingBag
 } from 'lucide-react';
+import SearchBar from '../common/SearchBar';
 import './Navbar.css';
 
 export default function Navbar({ onToggleSidebar, sidebarOpen }) {
-  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
-    }
-  };
 
   return (
     <nav className="navbar">
@@ -43,25 +36,9 @@ export default function Navbar({ onToggleSidebar, sidebarOpen }) {
         </Link>
       </div>
 
-      <form className="navbar-search" onSubmit={handleSearch}>
-        <Search size={16} className="navbar-search-icon" />
-        <input
-          type="text"
-          className="navbar-search-input"
-          placeholder="Search products, brands, ingredients..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          aria-label="Search products"
-        />
-        <button
-          type="button"
-          className="navbar-scan-btn"
-          onClick={() => navigate('/scanner')}
-          title="Scan barcode"
-        >
-          <ScanBarcode size={18} />
-        </button>
-      </form>
+      <div className="navbar-search">
+        <SearchBar placeholder="Search products, brands, ingredients..." />
+      </div>
 
       <div className="navbar-right">
         <Link to="/scanner" className="btn btn-ghost btn-icon mobile-scan-btn" title="Scan barcode">
