@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
+import ChatWidget from '../chat/ChatWidget';
 import './Layout.css';
 
 export default function Layout({ children }) {
@@ -24,6 +25,7 @@ export default function Layout({ children }) {
           {children}
         </div>
       </main>
+      <ChatWidget />
     </div>
   );
 }
