@@ -1,0 +1,138 @@
+.price-history {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.ph-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.ph-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.ph-subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+}
+
+.ph-trend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+}
+
+.ph-trend.up {
+  color: var(--color-danger);
+  background: var(--color-danger-light);
+}
+
+.ph-trend.down {
+  color: var(--color-success);
+  background: var(--color-success-light);
+}
+
+.ph-trend.neutral {
+  color: var(--color-text-secondary);
+  background: var(--color-bg-secondary);
+}
+
+/* Chart Area */
+.ph-chart-container {
+  display: flex;
+  height: 200px;
+  gap: var(--space-3);
+}
+
+.ph-y-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  padding-bottom: 24px; /* Space for x-axis labels */
+  text-align: right;
+  min-width: 45px;
+}
+
+.ph-chart {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 4px;
+}
+
+.ph-bar-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  height: 100%;
+}
+
+.ph-bar-wrapper {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  position: relative;
+}
+
+.ph-bar {
+  width: 24px;
+  background: linear-gradient(to top, var(--color-accent-violet-light), var(--color-accent-violet));
+  border-radius: 4px 4px 0 0;
+  transition: all 0.5s ease;
+  position: relative;
+}
+
+.ph-bar:hover {
+  background: linear-gradient(to top, var(--color-accent-cyan-light), var(--color-accent-cyan));
+  cursor: pointer;
+}
+
+.ph-bar-label {
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  background: var(--color-bg-secondary);
+  padding: 2px 4px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  z-index: 10;
+}
+
+.ph-bar:hover .ph-bar-label {
+  opacity: 1;
+}
+
+.ph-x-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin-top: var(--space-2);
+}
+
+@media (max-width: 480px) {
+  .ph-bar {
+    width: 16px;
+  }
+}
