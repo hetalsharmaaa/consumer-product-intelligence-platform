@@ -9,8 +9,14 @@ export function useComparison() {
 
 export function ComparisonProvider({ children }) {
   const [compareItems, setCompareItems] = useState(() => {
-    const saved = localStorage.getItem('compareItems');
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem('compareItems');
+      if (!saved) return [];
+      const parsed = JSON.parse(saved);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      return [];
+    }
   });
 
   useEffect(() => {
