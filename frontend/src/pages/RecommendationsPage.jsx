@@ -3,7 +3,7 @@ import { Sparkles, TrendingUp, Star, Clock } from 'lucide-react';
 import { getFeaturedProducts, getTrendingProducts, getSimilarProducts } from '../services/mockData';
 import { useWishlist } from '../context/WishlistContext';
 import RecommendationCard from '../components/recommendations/RecommendationCard';
-import PageLoader from '../components/common/PageLoader';
+import { PageLoader } from '../components/common/Loader';
 import './RecommendationsPage.css';
 
 export default function RecommendationsPage() {
