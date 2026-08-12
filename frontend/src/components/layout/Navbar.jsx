@@ -56,7 +56,7 @@ export default function Navbar({ onToggleSidebar, sidebarOpen }) {
       <div className="navbar-right">
         <Link to="/compare" className="btn btn-ghost btn-icon navbar-compare-btn" title="Compare products">
           <ArrowRightLeft size={20} />
-          {compareItems.length > 0 && (
+          {compareItems?.length > 0 && (
             <span className="navbar-badge">{compareItems.length}</span>
           )}
         </Link>
