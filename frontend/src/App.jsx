@@ -22,6 +22,8 @@ const BrandsListPage = lazy(() => import('./pages/BrandsListPage'));
 const BrandProfilePage = lazy(() => import('./pages/BrandProfilePage'));
 const AdminDashboardPage = lazy(() => import('./pages/AdminDashboardPage'));
 const AdminProductsPage = lazy(() => import('./pages/AdminProductsPage'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage'));
+const HistoryPage = lazy(() => import('./pages/HistoryPage'));
 
 // These pages will be added by their respective feature branches
 const PlaceholderPage = lazy(() => import('./pages/PlaceholderPage'));
@@ -48,7 +50,8 @@ export default function App() {
                     <Route path="/recommendations" element={<RecommendationsPage />} />
                     <Route path="/brands" element={<BrandsListPage />} />
                     <Route path="/brands/:name" element={<BrandProfilePage />} />
-                    <Route path="/history" element={<PlaceholderPage title="Search History" />} />
+                    <Route path="/history" element={<HistoryPage />} />
+                    <Route path="/profile" element={<ProfilePage />} />
                     <Route path="/admin" element={<AdminDashboardPage />} />
                     <Route path="/admin/products" element={<AdminProductsPage />} />
                     <Route path="/admin/users" element={<PlaceholderPage title="Manage Users" />} />
