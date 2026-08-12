@@ -20,6 +20,8 @@ const WishlistPage = lazy(() => import('./pages/WishlistPage'));
 const RecommendationsPage = lazy(() => import('./pages/RecommendationsPage'));
 const BrandsListPage = lazy(() => import('./pages/BrandsListPage'));
 const BrandProfilePage = lazy(() => import('./pages/BrandProfilePage'));
+const AdminDashboardPage = lazy(() => import('./pages/AdminDashboardPage'));
+const AdminProductsPage = lazy(() => import('./pages/AdminProductsPage'));
 
 // These pages will be added by their respective feature branches
 const PlaceholderPage = lazy(() => import('./pages/PlaceholderPage'));
@@ -47,8 +49,8 @@ export default function App() {
                     <Route path="/brands" element={<BrandsListPage />} />
                     <Route path="/brands/:name" element={<BrandProfilePage />} />
                     <Route path="/history" element={<PlaceholderPage title="Search History" />} />
-                    <Route path="/admin" element={<PlaceholderPage title="Admin Dashboard" />} />
-                    <Route path="/admin/products" element={<PlaceholderPage title="Manage Products" />} />
+                    <Route path="/admin" element={<AdminDashboardPage />} />
+                    <Route path="/admin/products" element={<AdminProductsPage />} />
                     <Route path="/admin/users" element={<PlaceholderPage title="Manage Users" />} />
                     <Route path="*" element={<PlaceholderPage title="Page Not Found" is404 />} />
                   </Routes>
