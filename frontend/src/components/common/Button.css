@@ -1,0 +1,12 @@
+.btn-full-width {
+  width: 100%;
+}
+
+.btn-loading {
+  position: relative;
+}
+
+.btn-loading .spinner {
+  border-color: rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+}

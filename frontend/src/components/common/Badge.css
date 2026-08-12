@@ -1,0 +1,16 @@
+.badge-size-sm {
+  padding: 2px var(--space-2);
+  font-size: 10px;
+}
+
+.badge-size-lg {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--font-size-sm);
+}
+
+.badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
