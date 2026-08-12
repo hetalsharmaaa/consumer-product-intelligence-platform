@@ -7,6 +7,7 @@ import { PageLoader } from './components/common/Loader';
 
 // Lazy-loaded pages for code splitting
 const HomePage = lazy(() => import('./pages/HomePage'));
+const SearchPage = lazy(() => import('./pages/SearchPage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/RegisterPage'));
 const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'));
@@ -26,7 +27,7 @@ export default function App() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-                <Route path="/search" element={<PlaceholderPage title="Search" />} />
+                <Route path="/search" element={<SearchPage />} />
                 <Route path="/product/:id" element={<PlaceholderPage title="Product Detail" />} />
                 <Route path="/scanner" element={<PlaceholderPage title="Barcode Scanner" />} />
                 <Route path="/compare" element={<PlaceholderPage title="Compare Products" />} />
