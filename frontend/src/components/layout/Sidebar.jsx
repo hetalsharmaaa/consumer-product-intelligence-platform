@@ -10,6 +10,7 @@ import {
   History,
   ShieldCheck,
   ChevronLeft,
+  User,
 } from 'lucide-react';
 import { useWishlist } from '../../context/WishlistContext';
 import './Sidebar.css';
@@ -23,6 +24,7 @@ const navItems = [
   { path: '/recommendations', label: 'For You', icon: Sparkles },
   { path: '/brands', label: 'Brands', icon: Building2 },
   { path: '/history', label: 'History', icon: History },
+  { path: '/profile', label: 'Profile', icon: User },
 ];
 
 const adminItems = [
