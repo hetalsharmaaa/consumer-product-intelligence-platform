@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { getProductById, getCategoryColors } from '../services/mockData';
 import { useComparison } from '../context/ComparisonContext';
+import { useWishlist } from '../context/WishlistContext';
 import Button from '../components/common/Button';
 import Badge from '../components/common/Badge';
 import Rating from '../components/common/Rating';
@@ -25,8 +26,8 @@ export default function ProductDetailPage() {
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isWishlisted, setIsWishlisted] = useState(false);
   const { addToCompare, removeFromCompare, isInCompare, compareItems } = useComparison();
+  const { toggleWishlist, isInWishlist } = useWishlist();
 
   useEffect(() => {
     // Simulate API fetch
@@ -91,13 +92,17 @@ export default function ProductDetailPage() {
             className="pdp-image"
             style={{ background: `linear-gradient(135deg, ${colors.bg}, ${colors.accent}33)` }}
           >
+            <div className="pdp-badges">
+              <Badge variant="cyan">{product.category}</Badge>
+              {product.rating >= 4.5 && <Badge variant="warning">Top Rated</Badge>}
+            </div>
             <div className="pdp-image-actions">
               <button 
-                className={`pdp-action-btn ${isWishlisted ? 'active' : ''}`}
-                onClick={() => setIsWishlisted(!isWishlisted)}
-                aria-label="Add to wishlist"
+                className={`pdp-action-btn ${isInWishlist(product.id) ? 'active' : ''}`}
+                onClick={() => toggleWishlist(product.id)}
+                aria-label={isInWishlist(product.id) ? "Remove from wishlist" : "Add to wishlist"}
               >
-                <Heart size={20} fill={isWishlisted ? 'currentColor' : 'none'} />
+                <Heart size={20} fill={isInWishlist(product.id) ? 'currentColor' : 'none'} />
               </button>
               <button className="pdp-action-btn" aria-label="Share product">
                 <Share2 size={20} />
