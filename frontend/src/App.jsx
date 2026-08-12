@@ -17,6 +17,7 @@ const RegisterPage = lazy(() => import('./pages/RegisterPage'));
 const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'));
 const ComparisonPage = lazy(() => import('./pages/ComparisonPage'));
 const WishlistPage = lazy(() => import('./pages/WishlistPage'));
+const RecommendationsPage = lazy(() => import('./pages/RecommendationsPage'));
 
 // These pages will be added by their respective feature branches
 const PlaceholderPage = lazy(() => import('./pages/PlaceholderPage'));
@@ -40,7 +41,7 @@ export default function App() {
                     <Route path="/scanner" element={<ScannerPage />} />
                     <Route path="/compare" element={<ComparisonPage />} />
                     <Route path="/wishlist" element={<WishlistPage />} />
-                    <Route path="/recommendations" element={<PlaceholderPage title="Recommendations" />} />
+                    <Route path="/recommendations" element={<RecommendationsPage />} />
                     <Route path="/brands" element={<PlaceholderPage title="Brands" />} />
                     <Route path="/brands/:name" element={<PlaceholderPage title="Brand Profile" />} />
                     <Route path="/history" element={<PlaceholderPage title="Search History" />} />
