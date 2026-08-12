@@ -4,7 +4,7 @@ import { Building2, ArrowLeft, Star, Package, Filter, SlidersHorizontal } from '
 import { getBrandStats, getProductsByBrand } from '../services/mockData';
 import Card from '../components/common/Card';
 import Badge from '../components/common/Badge';
-import Rating from '../common/Rating';
+import Rating from '../components/common/Rating';
 import { PageLoader } from '../components/common/Loader';
 import './BrandProfilePage.css';
 

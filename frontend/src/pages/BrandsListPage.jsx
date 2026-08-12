@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { Building2, TrendingUp, Search } from 'lucide-react';
 import { getBrands, getBrandStats } from '../services/mockData';
 import Card from '../components/common/Card';
-import Badge from '../common/Badge';
-import Rating from '../common/Rating';
+import Badge from '../components/common/Badge';
+import Rating from '../components/common/Rating';
 import { PageLoader } from '../components/common/Loader';
 import './BrandsListPage.css';
 
