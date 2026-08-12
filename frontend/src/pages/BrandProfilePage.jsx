@@ -5,7 +5,7 @@ import { getBrandStats, getProductsByBrand } from '../services/mockData';
 import Card from '../components/common/Card';
 import Badge from '../components/common/Badge';
 import Rating from '../common/Rating';
-import PageLoader from '../components/common/PageLoader';
+import { PageLoader } from '../components/common/Loader';
 import './BrandProfilePage.css';
 
 export default function BrandProfilePage() {
