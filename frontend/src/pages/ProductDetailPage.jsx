@@ -17,6 +17,7 @@ import Badge from '../components/common/Badge';
 import Rating from '../components/common/Rating';
 import IngredientAnalysis from '../components/common/IngredientAnalysis';
 import PriceHistoryChart from '../components/common/PriceHistoryChart';
+import ReviewsSection from '../components/reviews/ReviewsSection';
 import './ProductDetailPage.css';
 
 export default function ProductDetailPage() {
@@ -199,6 +200,8 @@ export default function ProductDetailPage() {
           <PriceHistoryChart currentPrice={product.price} />
         </div>
       </div>
+
+      <ReviewsSection productId={product.id} />
     </div>
   );
 }
