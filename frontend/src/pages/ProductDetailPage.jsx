@@ -11,6 +11,7 @@ import {
   Info
 } from 'lucide-react';
 import { getProductById, getCategoryColors } from '../services/mockData';
+import { useComparison } from '../context/ComparisonContext';
 import Button from '../components/common/Button';
 import Badge from '../components/common/Badge';
 import Rating from '../components/common/Rating';
@@ -24,6 +25,7 @@ export default function ProductDetailPage() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const { addToCompare, removeFromCompare, isInCompare, compareItems } = useComparison();
 
   useEffect(() => {
     // Simulate API fetch
@@ -140,9 +142,26 @@ export default function ProductDetailPage() {
               <ShoppingBag size={20} />
               Buy Now
             </Button>
-            <Button variant="secondary" size="lg" className="pdp-compare-btn">
-              Compare Alternatives
-            </Button>
+            {isInCompare(product.id) ? (
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="pdp-compare-btn"
+                onClick={() => navigate('/compare')}
+              >
+                View Comparison ({compareItems.length})
+              </Button>
+            ) : (
+              <Button 
+                variant="secondary" 
+                size="lg" 
+                className="pdp-compare-btn"
+                onClick={() => addToCompare(product.id)}
+                disabled={compareItems.length >= 4}
+              >
+                {compareItems.length >= 4 ? 'Compare Full (4/4)' : 'Add to Compare'}
+              </Button>
+            )}
           </div>
           
           <div className="pdp-retailers">
