@@ -2,43 +2,67 @@ import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import { ToastProvider } from './components/common/Toast';
+import { AuthProvider } from './context/AuthContext';
+import { ComparisonProvider } from './context/ComparisonContext';
+import { WishlistProvider } from './context/WishlistContext';
 import { PageLoader } from './components/common/Loader';
 
 // Lazy-loaded pages for code splitting
 const HomePage = lazy(() => import('./pages/HomePage'));
+const SearchPage = lazy(() => import('./pages/SearchPage'));
+const ProductDetailPage = lazy(() => import('./pages/ProductDetailPage'));
+const ScannerPage = lazy(() => import('./pages/ScannerPage'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const RegisterPage = lazy(() => import('./pages/RegisterPage'));
+const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'));
+const ComparisonPage = lazy(() => import('./pages/ComparisonPage'));
+const WishlistPage = lazy(() => import('./pages/WishlistPage'));
+const RecommendationsPage = lazy(() => import('./pages/RecommendationsPage'));
+const BrandsListPage = lazy(() => import('./pages/BrandsListPage'));
+const BrandProfilePage = lazy(() => import('./pages/BrandProfilePage'));
+const AdminDashboardPage = lazy(() => import('./pages/AdminDashboardPage'));
+const AdminProductsPage = lazy(() => import('./pages/AdminProductsPage'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage'));
+const HistoryPage = lazy(() => import('./pages/HistoryPage'));
 
 // These pages will be added by their respective feature branches
-// Placeholders ensure routing works without errors
 const PlaceholderPage = lazy(() => import('./pages/PlaceholderPage'));
 
 export default function App() {
   return (
     <BrowserRouter>
-      <ToastProvider>
-        <Layout>
-          <Suspense fallback={<PageLoader />}>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/search" element={<PlaceholderPage title="Search" />} />
-              <Route path="/product/:id" element={<PlaceholderPage title="Product Detail" />} />
-              <Route path="/scanner" element={<PlaceholderPage title="Barcode Scanner" />} />
-              <Route path="/compare" element={<PlaceholderPage title="Compare Products" />} />
-              <Route path="/wishlist" element={<PlaceholderPage title="Wishlist" />} />
-              <Route path="/recommendations" element={<PlaceholderPage title="Recommendations" />} />
-              <Route path="/brands" element={<PlaceholderPage title="Brands" />} />
-              <Route path="/brands/:name" element={<PlaceholderPage title="Brand Profile" />} />
-              <Route path="/history" element={<PlaceholderPage title="Search History" />} />
-              <Route path="/login" element={<PlaceholderPage title="Sign In" />} />
-              <Route path="/register" element={<PlaceholderPage title="Create Account" />} />
-              <Route path="/forgot-password" element={<PlaceholderPage title="Reset Password" />} />
-              <Route path="/admin" element={<PlaceholderPage title="Admin Dashboard" />} />
-              <Route path="/admin/products" element={<PlaceholderPage title="Manage Products" />} />
-              <Route path="/admin/users" element={<PlaceholderPage title="Manage Users" />} />
-              <Route path="*" element={<PlaceholderPage title="Page Not Found" is404 />} />
-            </Routes>
-          </Suspense>
-        </Layout>
-      </ToastProvider>
+      <AuthProvider>
+        <ToastProvider>
+          <WishlistProvider>
+            <ComparisonProvider>
+              <Layout>
+                <Suspense fallback={<PageLoader />}>
+                  <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/register" element={<RegisterPage />} />
+                    <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                    <Route path="/search" element={<SearchPage />} />
+                    <Route path="/product/:id" element={<ProductDetailPage />} />
+                    <Route path="/scanner" element={<ScannerPage />} />
+                    <Route path="/compare" element={<ComparisonPage />} />
+                    <Route path="/wishlist" element={<WishlistPage />} />
+                    <Route path="/recommendations" element={<RecommendationsPage />} />
+                    <Route path="/brands" element={<BrandsListPage />} />
+                    <Route path="/brands/:name" element={<BrandProfilePage />} />
+                    <Route path="/history" element={<HistoryPage />} />
+                    <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="/admin" element={<AdminDashboardPage />} />
+                    <Route path="/admin/products" element={<AdminProductsPage />} />
+                    <Route path="/admin/users" element={<PlaceholderPage title="Manage Users" />} />
+                    <Route path="*" element={<PlaceholderPage title="Page Not Found" is404 />} />
+                  </Routes>
+                </Suspense>
+              </Layout>
+            </ComparisonProvider>
+          </WishlistProvider>
+        </ToastProvider>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

@@ -1,0 +1,363 @@
+/* ============================================
+   Product Detail Page Styles
+   ============================================ */
+
+.pdp-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding-bottom: var(--space-12);
+}
+
+/* --- Navigation --- */
+.pdp-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  padding: var(--space-2) 0;
+  transition: color var(--transition-fast);
+}
+
+.back-btn:hover {
+  color: var(--color-text-primary);
+}
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+}
+
+.breadcrumbs a {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.breadcrumbs a:hover {
+  color: var(--color-text-primary);
+  text-decoration: underline;
+}
+
+.breadcrumbs .current {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+/* --- Main Section --- */
+.pdp-main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-12);
+  align-items: flex-start;
+}
+
+/* Image Section */
+.pdp-image-section {
+  position: sticky;
+  top: calc(var(--navbar-height) + var(--space-6));
+}
+
+.pdp-image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-2xl);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--color-border);
+}
+
+.pdp-placeholder-text {
+  font-size: var(--font-size-xl);
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: var(--font-weight-bold);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.pdp-image-actions {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.pdp-action-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-fast);
+}
+
+.pdp-action-btn:hover {
+  transform: translateY(-2px);
+  color: var(--color-text-primary);
+  box-shadow: var(--shadow-lg);
+}
+
+.pdp-action-btn.active {
+  color: var(--color-danger);
+}
+
+/* Details Section */
+.pdp-details-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.pdp-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.pdp-brand {
+  color: var(--color-accent-cyan);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-decoration: none;
+}
+
+.pdp-brand:hover {
+  text-decoration: underline;
+}
+
+.pdp-title {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+}
+
+.pdp-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: var(--space-2);
+}
+
+.pdp-rating {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.pdp-reviews-count {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Price Box */
+.pdp-price-box {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  padding: var(--space-4) 0;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.pdp-price {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+.pdp-availability {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.pdp-availability.in-stock {
+  color: var(--color-success);
+}
+
+.pdp-availability .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* Description */
+.pdp-description {
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-secondary);
+}
+
+/* Actions */
+.pdp-actions {
+  display: flex;
+  gap: var(--space-4);
+}
+
+.pdp-buy-btn {
+  flex: 2;
+}
+
+.pdp-compare-btn {
+  flex: 1;
+}
+
+/* Retailers */
+.pdp-retailers {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--font-size-sm);
+}
+
+.retailers-label {
+  color: var(--color-text-tertiary);
+}
+
+.retailers-links {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.retailer-link {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.retailer-link:hover {
+  color: var(--color-accent-violet);
+  text-decoration: underline;
+}
+
+/* Specs */
+.pdp-specs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  background: var(--color-bg-tertiary);
+  padding: var(--space-5);
+  border-radius: var(--radius-xl);
+  margin-top: var(--space-4);
+}
+
+.spec-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.spec-icon {
+  color: var(--color-text-tertiary);
+  margin-top: 2px;
+}
+
+.spec-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.spec-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.spec-value {
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+/* --- Analysis Section --- */
+.pdp-analysis-section {
+  margin-top: var(--space-8);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--color-border);
+}
+
+.pdp-analysis-grid {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: var(--space-6);
+  align-items: stretch;
+}
+
+/* --- States --- */
+.pdp-not-found {
+  text-align: center;
+  padding: var(--space-20) 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+/* --- Responsive --- */
+@media (max-width: 1024px) {
+  .pdp-main {
+    gap: var(--space-8);
+  }
+  
+  .pdp-analysis-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .pdp-main {
+    grid-template-columns: 1fr;
+  }
+  
+  .pdp-image-section {
+    position: static;
+  }
+
+  .pdp-title {
+    font-size: var(--font-size-3xl);
+  }
+
+  .pdp-actions {
+    flex-direction: column;
+  }
+  
+  .breadcrumbs {
+    display: none;
+  }
+}
