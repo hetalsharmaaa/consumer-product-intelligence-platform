@@ -6,6 +6,7 @@ import { PageLoader } from './components/common/Loader';
 
 // Lazy-loaded pages for code splitting
 const HomePage = lazy(() => import('./pages/HomePage'));
+const SearchPage = lazy(() => import('./pages/SearchPage'));
 
 // These pages will be added by their respective feature branches
 // Placeholders ensure routing works without errors
@@ -19,7 +20,7 @@ export default function App() {
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/search" element={<PlaceholderPage title="Search" />} />
+              <Route path="/search" element={<SearchPage />} />
               <Route path="/product/:id" element={<PlaceholderPage title="Product Detail" />} />
               <Route path="/scanner" element={<PlaceholderPage title="Barcode Scanner" />} />
               <Route path="/compare" element={<PlaceholderPage title="Compare Products" />} />
