@@ -1,5 +1,4 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { getAllProducts } from '../services/mockData';
 
 const ComparisonContext = createContext();
 
@@ -11,31 +10,53 @@ export function ComparisonProvider({ children }) {
   const [compareItems, setCompareItems] = useState(() => {
     try {
       const saved = localStorage.getItem('compareItems');
+
       if (!saved) return [];
+
       const parsed = JSON.parse(saved);
+
       return Array.isArray(parsed) ? parsed : [];
-    } catch (e) {
+    } catch (error) {
+      console.error('Failed to load comparison items:', error);
       return [];
     }
   });
 
   useEffect(() => {
-    localStorage.setItem('compareItems', JSON.stringify(compareItems));
+    localStorage.setItem(
+      'compareItems',
+      JSON.stringify(compareItems)
+    );
   }, [compareItems]);
 
   const addToCompare = (productId) => {
     setCompareItems((prev) => {
-      if (prev.includes(productId)) return prev;
-      if (prev.length >= 4) {
-        // Remove oldest if we exceed limit of 4
-        return [...prev.slice(1), productId];
+      const normalizedId = Number(productId);
+
+      if (prev.includes(normalizedId)) {
+        return prev;
       }
-      return [...prev, productId];
+
+      if (prev.length >= 4) {
+        return [
+          ...prev.slice(1),
+          normalizedId,
+        ];
+      }
+
+      return [
+        ...prev,
+        normalizedId,
+      ];
     });
   };
 
   const removeFromCompare = (productId) => {
-    setCompareItems((prev) => prev.filter(id => id !== productId));
+    const normalizedId = Number(productId);
+
+    setCompareItems((prev) =>
+      prev.filter(id => Number(id) !== normalizedId)
+    );
   };
 
   const clearCompare = () => {
@@ -43,23 +64,23 @@ export function ComparisonProvider({ children }) {
   };
 
   const isInCompare = (productId) => {
-    return compareItems.includes(productId);
-  };
+    const normalizedId = Number(productId);
 
-  const getComparedProducts = () => {
-    const allProducts = getAllProducts();
-    return compareItems.map(id => allProducts.find(p => p.id === id)).filter(Boolean);
+    return compareItems.some(
+      id => Number(id) === normalizedId
+    );
   };
 
   return (
-    <ComparisonContext.Provider value={{
-      compareItems,
-      addToCompare,
-      removeFromCompare,
-      clearCompare,
-      isInCompare,
-      getComparedProducts
-    }}>
+    <ComparisonContext.Provider
+      value={{
+        compareItems,
+        addToCompare,
+        removeFromCompare,
+        clearCompare,
+        isInCompare,
+      }}
+    >
       {children}
     </ComparisonContext.Provider>
   );

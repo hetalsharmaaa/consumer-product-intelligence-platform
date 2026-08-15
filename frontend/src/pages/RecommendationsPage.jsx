@@ -1,38 +1,80 @@
-import { useState, useEffect } from 'react';
-import { Sparkles, TrendingUp, Star, Clock } from 'lucide-react';
-import { getFeaturedProducts, getTrendingProducts, getSimilarProducts } from '../services/mockData';
-import { useWishlist } from '../context/WishlistContext';
+import { useEffect, useState } from 'react';
+import { Sparkles, Star } from 'lucide-react';
+import { getRecommendations } from '../services/api';
 import RecommendationCard from '../components/recommendations/RecommendationCard';
 import { PageLoader } from '../components/common/Loader';
 import './RecommendationsPage.css';
 
+function normalizeProducts(data) {
+  if (!data) return [];
+
+  // Normal expected response:
+  // { products: [...] }
+  if (Array.isArray(data.products)) {
+    return data.products.filter(Boolean);
+  }
+
+  // In case backend directly returns an array.
+  if (Array.isArray(data)) {
+    return data.filter(Boolean);
+  }
+
+  return [];
+}
+
+function getMetaMessage(data) {
+  if (!data || typeof data !== 'object') {
+    return 'Personalized recommendations based on your activity.';
+  }
+
+  return typeof data.message === 'string'
+    ? data.message
+    : 'Personalized recommendations based on your activity.';
+}
+
 export default function RecommendationsPage() {
   const [loading, setLoading] = useState(true);
-  const [featured, setFeatured] = useState([]);
-  const [trending, setTrending] = useState([]);
-  const [personalized, setPersonalized] = useState([]);
-  const { wishlistItems } = useWishlist();
+  const [products, setProducts] = useState([]);
+  const [meta, setMeta] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Simulate API fetch
-    setLoading(true);
-    
-    setTimeout(() => {
-      setFeatured(getFeaturedProducts());
-      setTrending(getTrendingProducts());
-      
-      // Generate personalized based on last wishlisted item, or random
-      if (wishlistItems && wishlistItems.length > 0) {
-        const lastWishlisted = wishlistItems[wishlistItems.length - 1];
-        setPersonalized(getSimilarProducts(lastWishlisted, 6));
-      } else {
-        // Fallback to trending for personalized if no wishlist
-        setPersonalized([...getTrendingProducts()].reverse());
+    let mounted = true;
+
+    const loadRecommendations = async () => {
+      try {
+        const data = await getRecommendations();
+
+        console.log('Recommendations API response:', data);
+
+        if (!mounted) return;
+
+        setProducts(normalizeProducts(data));
+        setMeta(data);
+        setError(null);
+      } catch (err) {
+        console.error('Recommendations error:', err);
+
+        if (!mounted) return;
+
+        setProducts([]);
+        setMeta(null);
+        setError(
+          'We could not load personalized recommendations right now.'
+        );
+      } finally {
+        if (mounted) {
+          setLoading(false);
+        }
       }
-      
-      setLoading(false);
-    }, 600);
-  }, [wishlistItems]);
+    };
+
+    loadRecommendations();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   if (loading) {
     return <PageLoader />;
@@ -42,65 +84,57 @@ export default function RecommendationsPage() {
     <div className="recommendations-page page-enter">
       <div className="recommendations-header">
         <h1 className="page-title">
-          <Sparkles size={28} className="title-icon text-accent" />
+          <Sparkles
+            size={28}
+            className="title-icon text-accent"
+          />
           For You
         </h1>
-        <p className="page-subtitle">Discover products tailored to your preferences and browsing history.</p>
-      </div>
-      
-      <div className="recommendations-sections">
-        {/* Personalized Section */}
-        <section className="rec-section slide-up" style={{ animationDelay: '0.1s' }}>
-          <div className="rec-section-header">
-            <h2 className="rec-section-title">
-              <Star size={20} className="text-warning" />
-              Recommended for You
-            </h2>
-            <button className="btn btn-ghost btn-sm">View All</button>
-          </div>
-          <div className="rec-scroll-container">
-            {personalized.length > 0 ? (
-              personalized.map(product => (
-                <RecommendationCard key={`pers-${product.id}`} product={product} />
-              ))
-            ) : (
-              <p className="rec-empty-text">Add items to your wishlist to get personalized recommendations.</p>
-            )}
-          </div>
-        </section>
 
-        {/* Trending Section */}
-        <section className="rec-section slide-up" style={{ animationDelay: '0.2s' }}>
-          <div className="rec-section-header">
-            <h2 className="rec-section-title">
-              <TrendingUp size={20} className="text-success" />
-              Trending Now
-            </h2>
-            <button className="btn btn-ghost btn-sm">View All</button>
-          </div>
-          <div className="rec-scroll-container">
-            {trending.map(product => (
-              <RecommendationCard key={`trend-${product.id}`} product={product} />
-            ))}
-          </div>
-        </section>
-
-        {/* Featured Section */}
-        <section className="rec-section slide-up" style={{ animationDelay: '0.3s' }}>
-          <div className="rec-section-header">
-            <h2 className="rec-section-title">
-              <Clock size={20} className="text-info" />
-              New & Featured
-            </h2>
-            <button className="btn btn-ghost btn-sm">View All</button>
-          </div>
-          <div className="rec-scroll-container">
-            {featured.map(product => (
-              <RecommendationCard key={`feat-${product.id}`} product={product} />
-            ))}
-          </div>
-        </section>
+        <p className="page-subtitle">
+          {getMetaMessage(meta)}
+        </p>
       </div>
+
+      <section className="rec-section slide-up">
+        <div className="rec-section-header">
+          <h2 className="rec-section-title">
+            <Star
+              size={20}
+              className="text-warning"
+            />
+            Recommended Products
+          </h2>
+        </div>
+
+        {error ? (
+          <p className="rec-empty-text">
+            {error}
+          </p>
+        ) : products.length > 0 ? (
+          <div className="rec-scroll-container">
+            {products.map((product, index) => {
+              // Make sure every rendered item has a stable key.
+              const key =
+                product?.id ??
+                product?.product_id ??
+                `recommendation-${index}`;
+
+              return (
+                <RecommendationCard
+                  key={key}
+                  product={product}
+                />
+              );
+            })}
+          </div>
+        ) : (
+          <p className="rec-empty-text">
+            Log in and search or save products to receive
+            personalized recommendations.
+          </p>
+        )}
+      </section>
     </div>
   );
 }

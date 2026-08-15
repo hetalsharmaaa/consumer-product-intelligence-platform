@@ -1,0 +1,14 @@
+asgiref==3.12.1
+Django==6.1
+djangorestframework==3.18.0
+djangorestframework_simplejwt==5.5.1
+PyJWT==2.13.0
+sqlparse==0.6.0
+tzdata==2026.3
+
+# AI / ML integration (backend/ai/engine)
+python-dotenv==1.2.2
+groq==1.6.0
+opencv-python-headless
+zxing-cpp
+numpy

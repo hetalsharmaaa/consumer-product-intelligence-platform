@@ -1,87 +1,204 @@
 import { useState, useEffect } from 'react';
 import { MessageSquare, Plus } from 'lucide-react';
-import { getReviewsByProductId, getRatingStats } from '../../services/reviewService';
+
+import {
+  getReviewsByProductId,
+  getRatingStats,
+  submitReview,
+} from '../../services/reviewService';
+
+import { useAuth } from '../../context/AuthContext';
 import RatingBreakdown from './RatingBreakdown';
 import ReviewList from './ReviewList';
 import ReviewForm from './ReviewForm';
 import Button from '../common/Button';
+
 import './ReviewsSection.css';
 
 export default function ReviewsSection({ productId }) {
+  const { isAuthenticated } = useAuth();
+
   const [reviews, setReviews] = useState([]);
-  const [stats, setStats] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const load = async () => {
+    if (!productId) {
+      setReviews([]);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      console.log(
+        'Loading reviews for product:',
+        productId
+      );
+
+      const data = await getReviewsByProductId(productId);
+
+      console.log(
+        'Reviews API response:',
+        data
+      );
+
+      /*
+       * Support both:
+       *
+       * [...]
+       *
+       * and:
+       *
+       * { reviews: [...] }
+       */
+      let normalizedReviews = [];
+
+      if (Array.isArray(data)) {
+        normalizedReviews = data;
+      } else if (Array.isArray(data?.reviews)) {
+        normalizedReviews = data.reviews;
+      } else if (Array.isArray(data?.results)) {
+        normalizedReviews = data.results;
+      }
+
+      setReviews(normalizedReviews);
+    } catch (err) {
+      console.error(
+        'Failed to load reviews:',
+        err
+      );
+
+      setReviews([]);
+
+      setError(
+        err?.response?.data?.detail ||
+        err?.response?.data?.message ||
+        'Unable to load reviews.'
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // Fetch reviews on mount
-    setLoading(true);
-    const fetchedReviews = getReviewsByProductId(productId);
-    
-    // Sort by date descending
-    fetchedReviews.sort((a, b) => new Date(b.date) - new Date(a.date));
-    
-    setReviews(fetchedReviews);
-    setStats(getRatingStats(fetchedReviews));
-    setLoading(false);
+    load();
   }, [productId]);
 
-  const handleReviewSubmitted = (newReview) => {
-    const updatedReviews = [newReview, ...reviews];
-    setReviews(updatedReviews);
-    setStats(getRatingStats(updatedReviews));
-    setShowForm(false);
+  const handleReviewSubmitted = async (reviewData) => {
+    try {
+      await submitReview(
+        productId,
+        reviewData
+      );
+
+      await load();
+
+      setShowForm(false);
+    } catch (err) {
+      console.error(
+        'Failed to submit review:',
+        err
+      );
+
+      alert(
+        err?.response?.data?.detail ||
+        err?.response?.data?.message ||
+        'Unable to submit review.'
+      );
+    }
   };
 
   if (loading) {
     return (
       <div className="reviews-section loading">
-        <div className="skeleton-text" style={{ width: '200px', height: '32px', marginBottom: '16px' }} />
-        <div className="skeleton-rect" style={{ height: '140px', marginBottom: '32px' }} />
-        <div className="skeleton-rect" style={{ height: '200px' }} />
+        <div
+          className="skeleton-text"
+          style={{
+            width: '200px',
+            height: '32px',
+          }}
+        />
       </div>
     );
   }
 
+  const stats = getRatingStats(reviews);
+
   return (
     <div className="reviews-section">
+
       <div className="reviews-header">
+
         <div className="reviews-title-wrapper">
-          <MessageSquare size={24} className="reviews-icon" />
-          <h2 className="reviews-title">Customer Reviews</h2>
+          <MessageSquare size={24} />
+
+          <h2 className="reviews-title">
+            Customer Reviews
+          </h2>
         </div>
-        
-        {!showForm && (
-          <Button onClick={() => setShowForm(true)} className="write-review-btn">
-            <Plus size={16} /> Write a Review
+
+        {isAuthenticated && !showForm && (
+          <Button
+            onClick={() =>
+              setShowForm(true)
+            }
+          >
+            <Plus size={16} />
+            Write a Review
           </Button>
         )}
       </div>
 
-      {showForm ? (
-        <div className="review-form-wrapper">
-          <ReviewForm 
-            productId={productId} 
-            onReviewSubmitted={handleReviewSubmitted}
-            onCancel={() => setShowForm(false)} 
+      {error && (
+        <p className="no-reviews-summary">
+          {error}
+        </p>
+      )}
+
+      {!error && showForm && (
+        <ReviewForm
+          productId={productId}
+          onReviewSubmitted={
+            handleReviewSubmitted
+          }
+          onCancel={() =>
+            setShowForm(false)
+          }
+        />
+      )}
+
+      {!error &&
+        !showForm &&
+        (stats ? (
+          <RatingBreakdown
+            stats={stats}
           />
-        </div>
-      ) : (
-        <div className="reviews-stats-container">
-          {stats && stats.total > 0 ? (
-            <RatingBreakdown stats={stats} />
-          ) : (
-            <p className="no-reviews-summary">This product hasn't received any reviews yet.</p>
-          )}
+        ) : (
+          <p className="no-reviews-summary">
+            No reviews yet.
+          </p>
+        ))}
+
+      {!error && (
+        <div className="reviews-list-container">
+
+          <h3 className="reviews-list-title">
+            {reviews.length
+              ? `Showing ${reviews.length} Reviews`
+              : 'Recent Reviews'}
+          </h3>
+
+          <ReviewList
+            reviews={reviews}
+          />
+
         </div>
       )}
 
-      <div className="reviews-list-container">
-        <h3 className="reviews-list-title">
-          {reviews.length > 0 ? `Showing ${reviews.length} Reviews` : 'Recent Reviews'}
-        </h3>
-        <ReviewList reviews={reviews} />
-      </div>
     </div>
   );
 }

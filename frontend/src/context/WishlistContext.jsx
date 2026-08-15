@@ -1,120 +1,56 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { useAuth } from './AuthContext';
-import { getAllProducts } from '../services/mockData';
+import { getWishlist, addWishlist, removeWishlist, clearWishlist, getProduct } from '../services/api';
 import { useToast } from '../components/common/Toast';
 
-const WishlistContext = createContext();
-
-export function useWishlist() {
-  return useContext(WishlistContext);
-}
+const WishlistContext = createContext(null);
+export const useWishlist = () => useContext(WishlistContext);
 
 export function WishlistProvider({ children }) {
   const { isAuthenticated } = useAuth();
   const { addToast } = useToast();
-  
-  const [wishlistItems, setWishlistItems] = useState(() => {
+  const [wishlistItems, setWishlistItems] = useState([]);
+  const [products, setProducts] = useState({});
+
+  useEffect(() => {
+    if (!isAuthenticated) { setWishlistItems([]); setProducts({}); return; }
+    getWishlist().then(async items => {
+      const ids = items.map(x => x.product?.id ?? x.product_id).filter(Boolean);
+      setWishlistItems(ids);
+      const loaded = {};
+      await Promise.all(ids.map(async id => { try { loaded[id] = await getProduct(id); } catch {} }));
+      setProducts(loaded);
+    }).catch(() => setWishlistItems([]));
+  }, [isAuthenticated]);
+
+  const addToWishlist = async (id) => {
+    if (!isAuthenticated) { addToast('Please login to add items to your wishlist', 'error'); return; }
     try {
-      const saved = localStorage.getItem('wishlistItems');
-      if (!saved) return [];
-      const parsed = JSON.parse(saved);
-      return Array.isArray(parsed) ? parsed : [];
-    } catch (e) {
-      return [];
-    }
-  });
-
-  const [lastAction, setLastAction] = useState(null);
-
-  useEffect(() => {
-    if (!lastAction) return;
-    if (lastAction.type === 'add') addToast('Added to wishlist', 'success');
-    if (lastAction.type === 'remove') addToast('Removed from wishlist', 'info');
-    if (lastAction.type === 'clear') addToast('Wishlist cleared', 'info');
-  }, [lastAction, addToast]);
-
-  useEffect(() => {
-    localStorage.setItem('wishlistItems', JSON.stringify(wishlistItems));
-  }, [wishlistItems]);
-
-  useEffect(() => {
-    const handleStorage = (e) => {
-      if (e.key === 'wishlistItems') {
-        try {
-          const parsed = JSON.parse(e.newValue);
-          setWishlistItems(Array.isArray(parsed) ? parsed : []);
-        } catch {
-          // ignore
-        }
-      }
-    };
-    window.addEventListener('storage', handleStorage);
-    return () => window.removeEventListener('storage', handleStorage);
-  }, []);
-
-  const addToWishlist = (productId) => {
-    if (!isAuthenticated) {
-      addToast('Please login to add items to your wishlist', 'error');
-      return;
-    }
-    
-    setWishlistItems((prev) => {
-      if (prev.includes(productId)) return prev;
-      setLastAction({ type: 'add', id: Date.now() });
-      return [...prev, productId];
-    });
+      await addWishlist(id);
+      setWishlistItems(prev => prev.includes(id) ? prev : [...prev, id]);
+      const p = await getProduct(id); setProducts(prev => ({ ...prev, [id]: p }));
+      addToast('Added to wishlist', 'success');
+    } catch (e) { addToast(e.response?.data?.error || 'Could not add to wishlist', 'error'); }
   };
 
-  const removeFromWishlist = (productId) => {
-    setWishlistItems((prev) => {
-      if (!prev.includes(productId)) return prev;
-      setLastAction({ type: 'remove', id: Date.now() });
-      return prev.filter(id => id !== productId);
-    });
+  const removeFromWishlist = async (id) => {
+    try {
+      await removeWishlist(id);
+      setWishlistItems(prev => prev.filter(x => x !== id));
+      setProducts(prev => { const n = { ...prev }; delete n[id]; return n; });
+      addToast('Removed from wishlist', 'info');
+    } catch (e) { addToast(e.response?.data?.error || 'Could not remove item', 'error'); }
   };
 
-  const toggleWishlist = (productId) => {
-    setWishlistItems((prev) => {
-      if (prev.includes(productId)) {
-        setLastAction({ type: 'remove', id: Date.now() });
-        return prev.filter(id => id !== productId);
-      } else {
-        if (!isAuthenticated) {
-          // Safe to call directly since we don't return new state, just short-circuit
-          setTimeout(() => addToast('Please login to add items to your wishlist', 'error'), 0);
-          return prev;
-        }
-        setLastAction({ type: 'add', id: Date.now() });
-        return [...prev, productId];
-      }
-    });
+  const toggleWishlist = (id) => isInWishlist(id) ? removeFromWishlist(id) : addToWishlist(id);
+  const clear = async () => {
+    try { await clearWishlist(); setWishlistItems([]); setProducts({}); addToast('Wishlist cleared', 'info'); }
+    catch (e) { addToast('Could not clear wishlist', 'error'); }
   };
+  const isInWishlist = id => wishlistItems.includes(id);
+  const getWishlistedProducts = () => wishlistItems.map(id => products[id]).filter(Boolean);
 
-  const clearWishlist = () => {
-    setWishlistItems([]);
-    setLastAction({ type: 'clear', id: Date.now() });
-  };
-
-  const isInWishlist = (productId) => {
-    return (wishlistItems || []).includes(productId);
-  };
-
-  const getWishlistedProducts = () => {
-    const allProducts = getAllProducts();
-    return (wishlistItems || []).map(id => allProducts.find(p => p.id === id)).filter(Boolean);
-  };
-
-  return (
-    <WishlistContext.Provider value={{
-      wishlistItems,
-      addToWishlist,
-      removeFromWishlist,
-      toggleWishlist,
-      clearWishlist,
-      isInWishlist,
-      getWishlistedProducts
-    }}>
-      {children}
-    </WishlistContext.Provider>
-  );
+  return <WishlistContext.Provider value={{ wishlistItems, addToWishlist, removeFromWishlist, toggleWishlist, clearWishlist: clear, isInWishlist, getWishlistedProducts }}>
+    {children}
+  </WishlistContext.Provider>;
 }

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Building2, TrendingUp, Search } from 'lucide-react';
-import { getBrands, getBrandStats } from '../services/mockData';
+import { getBrands } from '../services/api';
 import Card from '../components/common/Card';
 import Badge from '../components/common/Badge';
 import Rating from '../components/common/Rating';
@@ -15,14 +15,18 @@ export default function BrandsListPage() {
 
   useEffect(() => {
     setLoading(true);
-    setTimeout(() => {
-      const brandNames = getBrands();
-      const stats = brandNames.map(name => getBrandStats(name)).filter(Boolean);
-      // Sort by product count descending
-      stats.sort((a, b) => b.productCount - a.productCount);
-      setBrands(stats);
-      setLoading(false);
-    }, 400);
+    getBrands()
+      .then(async list => {
+        const enriched = await Promise.all(list.map(async b => {
+          const products = await import('../services/api').then(m => m.getBrandProducts(b.id));
+          const prices = products.map(p => Number(p.price || 0));
+          const avgRating = products.length ? products.reduce((sum,p) => sum + Number(p.rating || 0), 0) / products.length : 0;
+          return { ...b, productCount: products.length, avgRating, priceRange: { min: prices.length ? Math.min(...prices) : 0, max: prices.length ? Math.max(...prices) : 0 }, categories: [...new Set(products.map(p => p.category).filter(Boolean))] };
+        }));
+        setBrands(enriched.sort((a,b) => b.productCount - a.productCount));
+      })
+      .catch(() => setBrands([]))
+      .finally(() => setLoading(false));
   }, []);
 
   const filteredBrands = brands.filter(b => 

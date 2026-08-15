@@ -8,12 +8,12 @@ import {
   SlidersHorizontal,
   ChevronDown
 } from 'lucide-react';
-import { searchProducts, getAllProducts, getCategories, getBrands, getPriceRange } from '../services/mockData';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import Badge from '../components/common/Badge';
 import Rating from '../components/common/Rating';
 import SearchBar from '../components/common/SearchBar';
+import { getProducts, searchProducts } from '../services/api';
 import { getCategoryColors } from '../services/mockData';
 import './SearchPage.css';
 
@@ -40,45 +40,113 @@ export default function SearchPage() {
   const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 });
   const [sortBy, setSortBy] = useState('relevance');
 
-  const allCategories = useMemo(() => getCategories(), []);
-  const allBrands = useMemo(() => getBrands(), []);
-  const globalPriceRange = useMemo(() => getPriceRange(), []);
+  const [allProducts, setAllProducts] = useState([]);
+  const [allCategories, setAllCategories] = useState([]);
+  const [allBrands, setAllBrands] = useState([]);
+  const [globalPriceRange, setGlobalPriceRange] = useState({
+    min: 0,
+    max: 1000,
+  });
+  // Fetch products from Django
+useEffect(() => {
+  const fetchProducts = async () => {
+    try {
+      const results = query
+        ? await searchProducts(query)
+        : await getProducts();
 
-  // Fetch and filter products
-  useEffect(() => {
-    let results = query ? searchProducts(query) : getAllProducts();
+      const normalizedProducts = results.map(product => ({
+        ...product,
+        price: Number(product.price || 0),
+        rating: Number(product.rating || 0),
+      }));
 
-    // Apply category filter
-    if (selectedCategories.length > 0) {
-      results = results.filter(p => selectedCategories.includes(p.category));
-    }
+      setAllProducts(normalizedProducts);
 
-    // Apply brand filter
-    if (selectedBrands.length > 0) {
-      results = results.filter(p => selectedBrands.includes(p.brand));
-    }
+      const categories = [
+        ...new Set(normalizedProducts.map(product => product.category))
+      ].filter(Boolean);
 
-    // Apply rating filter
-    if (minRating > 0) {
-      results = results.filter(p => p.rating >= minRating);
-    }
+      const brands = [
+        ...new Set(normalizedProducts.map(product => product.brand))
+      ].filter(Boolean);
 
-    // Apply price filter
-    results = results.filter(p => p.price >= priceRange.min && p.price <= priceRange.max);
+      const prices = normalizedProducts.map(product => product.price);
 
-    // Apply sorting
-    results.sort((a, b) => {
-      switch (sortBy) {
-        case 'price-asc': return a.price - b.price;
-        case 'price-desc': return b.price - a.price;
-        case 'rating-desc': return b.rating - a.rating;
-        default: return 0; // relevance (mock implementation keeps original order)
+      setAllCategories(categories);
+      setAllBrands(brands);
+
+      if (prices.length > 0) {
+        setGlobalPriceRange({
+          min: Math.floor(Math.min(...prices)),
+          max: Math.ceil(Math.max(...prices)),
+        });
+      } else {
+        setGlobalPriceRange({
+          min: 0,
+          max: 1000,
+        });
       }
-    });
+    } catch (error) {
+      console.error('Failed to fetch products:', error);
+      setAllProducts([]);
+    }
+  };
 
-    setProducts(results);
-  }, [query, selectedCategories, selectedBrands, minRating, priceRange, sortBy]);
+  fetchProducts();
+}, [query]);
+// Apply frontend filters and sorting
+useEffect(() => {
+  let results = [...allProducts];
 
+  if (selectedCategories.length > 0) {
+    results = results.filter(product =>
+      selectedCategories.includes(product.category)
+    );
+  }
+
+  if (selectedBrands.length > 0) {
+    results = results.filter(product =>
+      selectedBrands.includes(product.brand)
+    );
+  }
+
+  if (minRating > 0) {
+    results = results.filter(product =>
+      product.rating >= minRating
+    );
+  }
+
+  results = results.filter(product =>
+    product.price >= priceRange.min &&
+    product.price <= priceRange.max
+  );
+
+  results.sort((a, b) => {
+    switch (sortBy) {
+      case 'price-asc':
+        return a.price - b.price;
+
+      case 'price-desc':
+        return b.price - a.price;
+
+      case 'rating-desc':
+        return b.rating - a.rating;
+
+      default:
+        return 0;
+    }
+  });
+
+  setProducts(results);
+}, [
+  allProducts,
+  selectedCategories,
+  selectedBrands,
+  minRating,
+  priceRange,
+  sortBy,
+]);
   // Initial setup for price range slider
   useEffect(() => {
     setPriceRange({ min: globalPriceRange.min, max: globalPriceRange.max });

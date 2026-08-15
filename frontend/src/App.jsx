@@ -6,6 +6,7 @@ import { AuthProvider } from './context/AuthContext';
 import { ComparisonProvider } from './context/ComparisonContext';
 import { WishlistProvider } from './context/WishlistContext';
 import { PageLoader } from './components/common/Loader';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 
 // Lazy-loaded pages for code splitting
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -46,14 +47,14 @@ export default function App() {
                     <Route path="/product/:id" element={<ProductDetailPage />} />
                     <Route path="/scanner" element={<ScannerPage />} />
                     <Route path="/compare" element={<ComparisonPage />} />
-                    <Route path="/wishlist" element={<WishlistPage />} />
-                    <Route path="/recommendations" element={<RecommendationsPage />} />
+                    <Route path="/wishlist" element={<ProtectedRoute><WishlistPage /></ProtectedRoute>} />
+                    <Route path="/recommendations" element={<ProtectedRoute><RecommendationsPage /></ProtectedRoute>} />
                     <Route path="/brands" element={<BrandsListPage />} />
                     <Route path="/brands/:name" element={<BrandProfilePage />} />
-                    <Route path="/history" element={<HistoryPage />} />
-                    <Route path="/profile" element={<ProfilePage />} />
-                    <Route path="/admin" element={<AdminDashboardPage />} />
-                    <Route path="/admin/products" element={<AdminProductsPage />} />
+                    <Route path="/history" element={<ProtectedRoute><HistoryPage /></ProtectedRoute>} />
+                    <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+                    <Route path="/admin" element={<ProtectedRoute adminOnly><AdminDashboardPage /></ProtectedRoute>} />
+                    <Route path="/admin/products" element={<ProtectedRoute adminOnly><AdminProductsPage /></ProtectedRoute>} />
                     <Route path="/admin/users" element={<PlaceholderPage title="Manage Users" />} />
                     <Route path="*" element={<PlaceholderPage title="Page Not Found" is404 />} />
                   </Routes>

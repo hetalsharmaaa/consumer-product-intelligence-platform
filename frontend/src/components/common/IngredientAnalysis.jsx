@@ -1,131 +1,369 @@
-import { useState, useEffect } from 'react';
-import { Leaf, ShieldCheck, AlertTriangle, Info, Sparkles, Brain } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import {
+  Leaf,
+  ShieldCheck,
+  AlertTriangle,
+  Sparkles,
+  Brain,
+} from 'lucide-react';
+
 import Card from './Card';
 import Badge from './Badge';
+import { analyzeIngredients } from '../../services/api';
+
 import './IngredientAnalysis.css';
-
-// Mock AI analysis generator for ingredients
-const generateIngredientAnalysis = (ingredientsStr, category) => {
-  if (!ingredientsStr) return null;
-
-  const ingredients = ingredientsStr.split(';').map(i => i.trim());
-  
-  // Simulate AI determining safety and concerns based on keywords
-  const analysis = {
-    score: 85 + Math.floor(Math.random() * 10), // 85-95 score
-    safetyLevel: 'High',
-    summary: `Based on AI analysis of ${ingredients.length} ingredients, this ${category.toLowerCase()} product is generally safe. It contains beneficial active ingredients with minimal potential irritants.`,
-    breakdown: ingredients.map(ing => {
-      const isNatural = ['Aloe Vera', 'Green Tea', 'Shea Butter', 'Coconut Oil', 'Rose Water', 'Chamomile'].some(n => ing.includes(n));
-      const isHarsh = ['Alcohol', 'Fragrance', 'Parfum', 'Sulfates', 'SLS'].some(h => ing.toUpperCase().includes(h.toUpperCase()));
-      
-      let type = 'neutral';
-      let desc = 'Standard cosmetic formulation ingredient.';
-      
-      if (isNatural) {
-        type = 'good';
-        desc = 'Natural extract known for soothing and nourishing properties.';
-      } else if (isHarsh) {
-        type = 'concern';
-        desc = 'Potential irritant for sensitive skin types.';
-      } else if (ing.includes('Acid') || ing.includes('Vitamin') || ing.includes('Peptides')) {
-        type = 'active';
-        desc = 'Active ingredient providing targeted benefits.';
-      }
-
-      return { name: ing, type, description: desc };
-    }),
-    concerns: [],
-    alternatives: []
-  };
-
-  if (analysis.breakdown.some(i => i.type === 'concern')) {
-    analysis.score -= 15;
-    analysis.safetyLevel = 'Moderate';
-    analysis.concerns.push('Contains potential irritants (e.g. synthetic fragrances or strong alcohols).');
-    analysis.alternatives = ['Product A (Fragrance-free)', 'Product B (Sensitive Skin Formulation)'];
-  }
-
-  return analysis;
-};
 
 export default function IngredientAnalysis({ product }) {
   const [analysis, setAnalysis] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Simulate AI API delay
-    setLoading(true);
-    const timer = setTimeout(() => {
-      setAnalysis(generateIngredientAnalysis(product.ingredients, product.category));
-      setLoading(false);
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, [product]);
+    let active = true;
 
-  if (!product.ingredients) {
+    const loadAnalysis = async () => {
+      if (!product?.id) {
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
+      setError(null);
+
+      try {
+        const data = await analyzeIngredients(product.id);
+
+        console.log('Ingredient analysis response:', data);
+
+        if (active) {
+          setAnalysis(data);
+        }
+      } catch (err) {
+        console.error('Ingredient analysis failed:', err);
+
+        if (active) {
+          setAnalysis(null);
+          setError(
+            err?.response?.data?.message ||
+              'Analysis is currently unavailable.'
+          );
+        }
+      } finally {
+        if (active) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadAnalysis();
+
+    return () => {
+      active = false;
+    };
+  }, [product?.id]);
+
+  /*
+   * If there is no ingredient/material information at all,
+   * don't show a fake analysis.
+   */
+  if (
+    !product?.ingredients &&
+    !product?.materials
+  ) {
     return (
       <Card className="ingredient-analysis empty">
-        <p>No ingredient information available for this product.</p>
+        <p>
+          No ingredient or material information available.
+        </p>
       </Card>
     );
   }
+
+  if (loading) {
+    return (
+      <div className="ingredient-analysis">
+        <div className="ia-header">
+          <h3 className="ia-title">
+            <Brain
+              size={20}
+              className="ia-icon-main"
+            />
+            AI Ingredient Analysis
+          </h3>
+
+          <div className="ia-score-loading skeleton" />
+        </div>
+
+        <div className="ia-loading-state">
+          <Sparkles size={32} />
+          <p>
+            Analyzing product information...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  /*
+   * The backend may return the useful data in different
+   * fields depending on whether AI analysis is available.
+   */
+  const ai =
+    analysis?.ai_summary ||
+    analysis?.analysis ||
+    {};
+
+  /*
+   * Support several possible backend response shapes.
+   */
+  const rawBreakdown =
+    ai?.breakdown ??
+    ai?.ingredients ??
+    analysis?.breakdown ??
+    analysis?.ingredients ??
+    analysis?.results ??
+    [];
+
+  const rawConcerns =
+    ai?.concerns ??
+    ai?.potential_concerns ??
+    analysis?.concerns ??
+    analysis?.potential_concerns ??
+    [];
+
+  const breakdown = Array.isArray(rawBreakdown)
+    ? rawBreakdown
+    : [];
+
+  const concerns = Array.isArray(rawConcerns)
+    ? rawConcerns
+    : [];
+
+  /*
+   * Try to find an actual AI summary.
+   */
+  const summary =
+    ai?.summary ||
+    ai?.message ||
+    analysis?.summary ||
+    analysis?.message ||
+    null;
+
+  /*
+   * If the API returned an error or absolutely no
+   * usable analysis information, show a useful state.
+   */
+  if (
+    error &&
+    breakdown.length === 0 &&
+    concerns.length === 0 &&
+    !summary
+  ) {
+    return (
+      <div className="ingredient-analysis">
+        <div className="ia-header">
+          <h3 className="ia-title">
+            <Brain
+              size={20}
+              className="ia-icon-main"
+            />
+            AI Ingredient Analysis
+          </h3>
+
+          <div className="ia-score-badge">
+            <ShieldCheck size={16} />
+            Analysis unavailable
+          </div>
+        </div>
+
+        <Card
+          className="ia-summary-card"
+          padding="sm"
+        >
+          <p className="ia-summary-text">
+            {error}
+          </p>
+        </Card>
+      </div>
+    );
+  }
+
+  /*
+   * If backend only returned parsed ingredients,
+   * use the actual product ingredient string as
+   * a fallback.
+   */
+  let fallbackIngredients = [];
+
+  if (
+    breakdown.length === 0 &&
+    typeof product.ingredients === 'string'
+  ) {
+    fallbackIngredients = product.ingredients
+      .split(',')
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+
+  const displayedBreakdown =
+    breakdown.length > 0
+      ? breakdown
+      : fallbackIngredients;
 
   return (
     <div className="ingredient-analysis">
       <div className="ia-header">
         <h3 className="ia-title">
-          <Brain size={20} className="ia-icon-main" />
+          <Brain
+            size={20}
+            className="ia-icon-main"
+          />
           AI Ingredient Analysis
         </h3>
-        {loading ? (
-          <div className="ia-score-loading skeleton" />
-        ) : (
-          <div className={`ia-score-badge ${analysis?.safetyLevel.toLowerCase()}`}>
-            <ShieldCheck size={16} />
-            Safety Score: {analysis?.score}/100
-          </div>
-        )}
+
+        <div className="ia-score-badge">
+          <ShieldCheck size={16} />
+          Analysis completed
+        </div>
       </div>
 
-      {loading ? (
-        <div className="ia-loading-state">
-          <Sparkles className="ia-scanning-icon pulse-glow" size={32} />
-          <p>AI is analyzing ingredients for safety and efficacy...</p>
-        </div>
-      ) : (
-        <div className="ia-content">
-          <Card className="ia-summary-card" padding="sm">
-            <p className="ia-summary-text">{analysis.summary}</p>
+      <div className="ia-content">
+
+        {/* Summary */}
+        {summary ? (
+          <Card
+            className="ia-summary-card"
+            padding="sm"
+          >
+            <p className="ia-summary-text">
+              {summary}
+            </p>
           </Card>
+        ) : displayedBreakdown.length === 0 &&
+          concerns.length === 0 ? (
+          <Card
+            className="ia-summary-card"
+            padding="sm"
+          >
+            <p className="ia-summary-text">
+              Ingredient information was retrieved,
+              but an AI summary is not available yet.
+            </p>
+          </Card>
+        ) : null}
 
-          {analysis.concerns.length > 0 && (
-            <div className="ia-concerns">
-              <h4 className="ia-section-title"><AlertTriangle size={16} /> Flagged Concerns</h4>
-              <ul className="ia-list">
-                {analysis.concerns.map((c, i) => <li key={i}>{c}</li>)}
-              </ul>
-            </div>
-          )}
+        {/* Concerns */}
+        {concerns.length > 0 && (
+          <div className="ia-concerns">
+            <h4 className="ia-section-title">
+              <AlertTriangle size={16} />
+              Flagged Concerns
+            </h4>
 
+            <ul className="ia-list">
+              {concerns.map((concern, index) => {
+                const text =
+                  typeof concern === 'string'
+                    ? concern
+                    : concern?.name ||
+                      concern?.description ||
+                      concern?.explanation ||
+                      JSON.stringify(concern);
+
+                return (
+                  <li key={index}>
+                    {text}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
+
+        {/* Ingredient Breakdown */}
+        {displayedBreakdown.length > 0 && (
           <div className="ia-breakdown">
-            <h4 className="ia-section-title"><Leaf size={16} /> Ingredient Breakdown</h4>
+            <h4 className="ia-section-title">
+              <Leaf size={16} />
+              Ingredient Breakdown
+            </h4>
+
             <div className="ia-list-grid">
-              {analysis.breakdown.map((ing, i) => (
-                <div key={i} className={`ia-item type-${ing.type}`}>
-                  <div className="ia-item-header">
-                    <span className="ia-item-name">{ing.name}</span>
-                    <Badge variant={ing.type === 'good' ? 'success' : ing.type === 'concern' ? 'danger' : ing.type === 'active' ? 'violet' : 'default'} size="sm">
-                      {ing.type}
-                    </Badge>
+              {displayedBreakdown.map((item, index) => {
+                const isObject =
+                  typeof item === 'object' &&
+                  item !== null;
+
+                const name = isObject
+                  ? item.name ||
+                    item.ingredient ||
+                    item.ingredient_name ||
+                    `Ingredient ${index + 1}`
+                  : String(item);
+
+                const description = isObject
+                  ? item.description ||
+                    item.explanation ||
+                    item.summary ||
+                    ''
+                  : '';
+
+                const type = isObject
+                  ? item.type ||
+                    item.category ||
+                    item.classification ||
+                    'Ingredient'
+                  : 'Ingredient';
+
+                return (
+                  <div
+                    key={index}
+                    className="ia-item"
+                  >
+                    <div className="ia-item-header">
+                      <span className="ia-item-name">
+                        {name}
+                      </span>
+
+                      <Badge
+                        size="sm"
+                      >
+                        {type}
+                      </Badge>
+                    </div>
+
+                    {description && (
+                      <p className="ia-item-desc">
+                        {description}
+                      </p>
+                    )}
                   </div>
-                  <p className="ia-item-desc">{ing.description}</p>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
-        </div>
-      )}
+        )}
+
+        {/* Raw product materials fallback */}
+        {displayedBreakdown.length === 0 &&
+          product.materials && (
+            <div className="ia-breakdown">
+              <h4 className="ia-section-title">
+                <Leaf size={16} />
+                Material Information
+              </h4>
+
+              <Card
+                className="ia-summary-card"
+                padding="sm"
+              >
+                <p className="ia-summary-text">
+                  {product.materials}
+                </p>
+              </Card>
+            </div>
+          )}
+      </div>
     </div>
   );
 }

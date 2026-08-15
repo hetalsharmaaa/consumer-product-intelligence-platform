@@ -1,14 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, UserPlus, User, ShoppingBag } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import Input from '../components/common/Input';
 import Button from '../components/common/Button';
 import { useToast } from '../components/common/Toast';
-import { getCategories } from '../services/mockData';
+import { getCategories } from '../services/api';
 import './AuthPages.css';
-
-const allCategories = getCategories();
 
 export default function RegisterPage() {
   const [form, setForm] = useState({
@@ -18,6 +16,8 @@ export default function RegisterPage() {
     confirmPassword: '',
   });
   const [selectedPreferences, setSelectedPreferences] = useState([]);
+  const [allCategories, setAllCategories] = useState([]);
+  useEffect(() => { getCategories().then(setAllCategories).catch(() => setAllCategories([])); }, []);
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);

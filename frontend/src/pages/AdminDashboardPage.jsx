@@ -1,24 +1,24 @@
-import { Users, Package, Activity, TrendingUp, Building2, AlertCircle } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Users, Package, Activity, Building2, AlertCircle } from 'lucide-react';
 import StatsCard from '../components/common/StatsCard';
 import DataTable from '../components/common/DataTable';
-import products, { getBrands } from '../services/mockData';
+import { getProducts, getBrands } from '../services/api';
 import './AdminDashboardPage.css';
 
 export default function AdminDashboardPage() {
-  // Mock data for the dashboard
-  const totalUsers = 1248;
-  const totalProducts = products.length;
-  const totalBrands = getBrands().length;
-  const activeSessions = 42;
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [totalBrands, setTotalBrands] = useState(0);
 
-  // Mock recent activity data
-  const recentActivity = [
-    { id: 1, action: 'User Registration', user: 'jane.doe@example.com', date: '2023-11-15T10:30:00Z', status: 'Success' },
-    { id: 2, action: 'Product Added', user: 'admin@platform.com', date: '2023-11-15T09:15:00Z', status: 'Success' },
-    { id: 3, action: 'Review Flagged', user: 'system', date: '2023-11-15T08:45:00Z', status: 'Warning' },
-    { id: 4, action: 'API Rate Limit Exceeded', user: 'app-client-1', date: '2023-11-14T23:20:00Z', status: 'Error' },
-    { id: 5, action: 'Brand Profile Updated', user: 'admin@platform.com', date: '2023-11-14T16:05:00Z', status: 'Success' },
-  ];
+  useEffect(() => {
+    Promise.all([getProducts(), getBrands()])
+      .then(([products, brands]) => { setTotalProducts(products.length); setTotalBrands(brands.length); })
+      .catch(() => {});
+  }, []);
+
+  const totalUsers = '—';
+  const activeSessions = '—';
+
+  const recentActivity = [];
 
   const columns = [
     { header: 'Action', accessor: 'action', width: '30%' },

@@ -1,12 +1,13 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Package, Plus, Edit, Trash2, Eye } from 'lucide-react';
-import initialProducts from '../services/mockData';
+import { getProducts } from '../services/api';
 import DataTable from '../components/common/DataTable';
 import Button from '../components/common/Button';
 import './AdminProductsPage.css';
 
 export default function AdminProductsPage() {
-  const [products, setProducts] = useState(initialProducts);
+  const [products, setProducts] = useState([]);
+  useEffect(() => { getProducts().then(setProducts).catch(() => setProducts([])); }, []);
 
   const handleDelete = (id) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
