@@ -1,0 +1,28 @@
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: var(--space-3);
+  color: var(--color-text-tertiary);
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.input-with-icon {
+  padding-left: var(--space-10);
+}
+
+.input-has-error {
+  border-color: var(--color-danger);
+}
+
+.input-has-error:focus {
+  box-shadow: 0 0 0 3px var(--color-danger-light);
+  border-color: var(--color-danger);
+}

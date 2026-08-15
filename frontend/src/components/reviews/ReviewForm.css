@@ -1,0 +1,103 @@
+.review-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  background: var(--color-bg-secondary);
+  padding: var(--space-6);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  animation: slideUp 0.3s ease;
+}
+
+.review-form-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.review-form-error {
+  background: rgba(244, 63, 94, 0.1);
+  color: var(--color-danger);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  border: 1px solid rgba(244, 63, 94, 0.2);
+}
+
+.star-rating-input {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.star-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: var(--color-border);
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.1s ease;
+}
+
+.star-btn.active {
+  color: var(--color-warning);
+}
+
+.rating-text {
+  margin-left: var(--space-3);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.form-group label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+}
+
+.form-input, .form-textarea {
+  width: 100%;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  transition: all var(--transition-fast);
+}
+
+.form-input:focus, .form-textarea:focus {
+  outline: none;
+  border-color: var(--color-accent-violet);
+  box-shadow: 0 0 0 2px var(--color-accent-violet-light);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.review-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.review-form-auth-gate {
+  background: var(--color-bg-secondary);
+  padding: var(--space-6);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  text-align: center;
+  color: var(--color-text-secondary);
+}

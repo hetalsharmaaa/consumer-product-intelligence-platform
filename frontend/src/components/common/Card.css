@@ -1,0 +1,26 @@
+.card {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-pad-sm { padding: var(--space-4); }
+.card-pad-md { padding: var(--space-6); }
+.card-pad-lg { padding: var(--space-8); }
+.card-pad-none { padding: 0; }
+
+.card-hover {
+  cursor: default;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card-clickable {
+  cursor: pointer;
+}
+
+.card-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
