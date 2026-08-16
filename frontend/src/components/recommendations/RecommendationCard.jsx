@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ShoppingBag } from 'lucide-react';
-import { getCategoryColors } from '../../services/mockData';
+import { getCategoryColors } from '../../utils/constants';
 import Card from '../common/Card';
 import Badge from '../common/Badge';
 import Rating from '../common/Rating';
