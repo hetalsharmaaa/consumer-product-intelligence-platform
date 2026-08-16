@@ -27,5 +27,12 @@ export const wishlistService = {
    */
   async checkWishlistStatus(productId) {
     return apiClient.get(`/wishlist/${productId}/status/`);
+  },
+
+  /**
+   * Clear wishlist
+   */
+  async clearWishlist() {
+    return apiClient.delete('/wishlist/clear/');
   }
 };
