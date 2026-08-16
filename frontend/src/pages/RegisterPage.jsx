@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import Input from '../components/common/Input';
 import Button from '../components/common/Button';
 import { useToast } from '../components/common/Toast';
-import { getCategories } from '../services/api';
+import { productService } from '../services/api/productService';
 import './AuthPages.css';
 
 export default function RegisterPage() {
@@ -17,7 +17,7 @@ export default function RegisterPage() {
   });
   const [selectedPreferences, setSelectedPreferences] = useState([]);
   const [allCategories, setAllCategories] = useState([]);
-  useEffect(() => { getCategories().then(setAllCategories).catch(() => setAllCategories([])); }, []);
+  useEffect(() => { productService.getCategories().then(setAllCategories).catch(() => setAllCategories([])); }, []);
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
