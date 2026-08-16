@@ -12,7 +12,7 @@ const apiClient = axios.create({
 // Request Interceptor
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('auth_token');
+    const token = localStorage.getItem('access_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -31,7 +31,7 @@ apiClient.interceptors.response.use(
   (error) => {
     // Handle 401 Unauthorized globally
     if (error.response && error.response.status === 401) {
-      localStorage.removeItem('auth_token');
+      localStorage.removeItem('access_token');
       // Optionally redirect to login, but usually handled by AuthContext
     }
     
