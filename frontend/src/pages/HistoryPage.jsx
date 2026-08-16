@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Clock, Search, Trash2, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { getSearchHistory, clearSearchHistory } from '../services/api';
+import { historyService } from '../services/api/historyService';
 import Button from '../components/common/Button';
 import './HistoryPage.css';
 
 export default function HistoryPage() {
   const [history, setHistory] = useState([]);
   const [error, setError] = useState('');
-  useEffect(() => { getSearchHistory().then(setHistory).catch(e => setError(e.response?.data?.detail || 'Please log in to view search history.')); }, []);
-  const clear = async () => { if (!window.confirm('Clear all search history?')) return; await clearSearchHistory(); setHistory([]); };
+  useEffect(() => { historyService.getSearchHistory().then(res => setHistory(res.search_history || res)).catch(e => setError(e.response?.data?.detail || 'Please log in to view search history.')); }, []);
+  const clear = async () => { if (!window.confirm('Clear all search history?')) return; await historyService.clearSearchHistory(); setHistory([]); };
   return <div className="history-page page-enter">
     <div className="history-header"><h1 className="page-title"><Clock size={28} className="title-icon text-accent"/> Search History</h1><p className="page-subtitle">Your recent product searches.</p></div>
     {error ? <div className="history-empty"><p>{error}</p></div> :
