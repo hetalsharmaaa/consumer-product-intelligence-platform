@@ -13,8 +13,8 @@ import Button from '../components/common/Button';
 import Badge from '../components/common/Badge';
 import Rating from '../components/common/Rating';
 import SearchBar from '../components/common/SearchBar';
-import { getProducts, searchProducts } from '../services/api';
-import { getCategoryColors } from '../services/mockData';
+import { productService } from '../services/api/productService';
+import { getCategoryColors } from '../utils/constants';
 import './SearchPage.css';
 
 const sortOptions = [
@@ -52,8 +52,8 @@ useEffect(() => {
   const fetchProducts = async () => {
     try {
       const results = query
-        ? await searchProducts(query)
-        : await getProducts();
+        ? await productService.searchProducts(query)
+        : await productService.getProducts();
 
       const normalizedProducts = results.map(product => ({
         ...product,
