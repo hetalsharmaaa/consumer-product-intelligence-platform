@@ -4,28 +4,55 @@ export const reviewService = {
   /**
    * Get reviews for a product
    */
-  async getProductReviews(productId, params = {}) {
-    return apiClient.get(`/reviews/product/${productId}/`, { params });
+  async getReviewsByProductId(productId) {
+    const data = await apiClient.get(`/reviews/product/${productId}/`);
+    return data.reviews || [];
   },
 
   /**
    * Add a new review
    */
-  async addReview(productId, data) {
-    return apiClient.post(`/reviews/product/${productId}/`, data);
+  async submitReview(productId, reviewData) {
+    return apiClient.post(`/reviews/product/${productId}/add/`, reviewData);
   },
 
   /**
-   * Mark a review as helpful
+   * Calculate rating stats client-side
    */
-  async markHelpful(reviewId) {
-    return apiClient.post(`/reviews/${reviewId}/helpful/`);
-  },
+  getRatingStats(reviews) {
+    if (!Array.isArray(reviews) || reviews.length === 0) {
+      return null;
+    }
 
-  /**
-   * Report a review
-   */
-  async reportReview(reviewId, reason) {
-    return apiClient.post(`/reviews/${reviewId}/report/`, { reason });
+    const distribution = {
+      5: 0,
+      4: 0,
+      3: 0,
+      2: 0,
+      1: 0,
+    };
+
+    let totalRating = 0;
+    let validRatings = 0;
+
+    reviews.forEach((review) => {
+      const rating = Math.round(Number(review?.rating));
+
+      if (rating >= 1 && rating <= 5) {
+        distribution[rating] += 1;
+        totalRating += Number(review.rating);
+        validRatings += 1;
+      }
+    });
+
+    if (validRatings === 0) {
+      return null;
+    }
+
+    return {
+      average: totalRating / validRatings,
+      total: reviews.length,
+      distribution,
+    };
   }
 };
