@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Sparkles, Star } from 'lucide-react';
-import { getRecommendations } from '../services/api';
+import { recommendationService } from '../services/api/recommendationService';
 import RecommendationCard from '../components/recommendations/RecommendationCard';
 import { PageLoader } from '../components/common/Loader';
 import './RecommendationsPage.css';
@@ -43,7 +43,7 @@ export default function RecommendationsPage() {
 
     const loadRecommendations = async () => {
       try {
-        const data = await getRecommendations();
+        const data = await recommendationService.getRecommendations();
 
         console.log('Recommendations API response:', data);
 
