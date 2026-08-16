@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { submitReview } from '../../services/reviewService';
+import { reviewService } from '../../services/api/reviewService';
 import Button from '../common/Button';
 import './ReviewForm.css';
 
@@ -43,7 +43,7 @@ export default function ReviewForm({
     setIsSubmitting(true);
 
     try {
-      const response = await submitReview(productId, {
+      const response = await reviewService.submitReview(productId, {
         rating,
         title: title.trim(),
         comment: comment.trim(),
