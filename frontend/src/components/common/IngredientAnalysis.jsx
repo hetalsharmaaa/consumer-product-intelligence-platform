@@ -9,7 +9,7 @@ import {
 
 import Card from './Card';
 import Badge from './Badge';
-import { analyzeIngredients } from '../../services/api';
+import { productService } from '../../services/api/productService';
 
 import './IngredientAnalysis.css';
 
@@ -31,7 +31,7 @@ export default function IngredientAnalysis({ product }) {
       setError(null);
 
       try {
-        const data = await analyzeIngredients(product.id);
+        const data = await productService.analyzeIngredients(product.id);
 
         console.log('Ingredient analysis response:', data);
 
