@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, Info } from 'lucide-react';
-import { getProductByBarcode } from '../services/api';
+import { productService } from '../services/api/productService';
 import { useScanner } from '../hooks/useScanner';
 import CameraView from '../components/scanner/CameraView';
 import ManualEntry from '../components/scanner/ManualEntry';
@@ -16,7 +16,7 @@ export default function ScannerPage() {
 
   const lookup = useCallback((barcode) => {
     setManualError(null);
-    getProductByBarcode(barcode)
+    productService.getProductByBarcode(barcode)
       .then(product => navigate(`/product/${product.id}`))
       .catch(() => { setManualError(`Barcode ${barcode} not found in database.`); setIsManualEntry(true); });
   }, [navigate]);
