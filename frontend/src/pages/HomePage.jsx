@@ -17,12 +17,8 @@ import {
 import Card from '../components/common/Card';
 import Badge from '../components/common/Badge';
 import Rating from '../components/common/Rating';
-import {
-  getFeaturedProducts,
-  getTrendingProducts,
-  getCategories,
-} from '../services/api';
-import { getCategoryColors } from '../services/mockData';
+import { productService } from '../services/api/productService';
+import { getCategoryColors } from '../utils/constants';
 import './HomePage.css';
 
 const features = [
@@ -116,9 +112,9 @@ export default function HomePage() {
           trending,
           categoryList,
         ] = await Promise.all([
-          getFeaturedProducts(),
-          getTrendingProducts(),
-          getCategories(),
+          productService.getFeaturedProducts(),
+          productService.getTrendingProducts(),
+          productService.getCategories(),
         ]);
 
         setFeaturedProducts(featured);

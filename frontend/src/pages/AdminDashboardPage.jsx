@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { Users, Package, Activity, Building2, AlertCircle } from 'lucide-react';
 import StatsCard from '../components/common/StatsCard';
 import DataTable from '../components/common/DataTable';
-import { getProducts, getBrands } from '../services/api';
+import { productService } from '../services/api/productService';
+import { brandService } from '../services/api/brandService';
 import './AdminDashboardPage.css';
 
 export default function AdminDashboardPage() {
@@ -10,7 +11,7 @@ export default function AdminDashboardPage() {
   const [totalBrands, setTotalBrands] = useState(0);
 
   useEffect(() => {
-    Promise.all([getProducts(), getBrands()])
+    Promise.all([productService.getProducts(), brandService.getBrands()])
       .then(([products, brands]) => { setTotalProducts(products.length); setTotalBrands(brands.length); })
       .catch(() => {});
   }, []);

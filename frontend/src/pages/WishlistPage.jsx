@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Heart, Trash2, ShoppingBag, ArrowLeft, Search } from 'lucide-react';
 import { useWishlist } from '../context/WishlistContext';
-import { getCategoryColors } from '../services/mockData';
+import { getCategoryColors } from '../utils/constants';
 import Button from '../components/common/Button';
 import Badge from '../components/common/Badge';
 import Rating from '../components/common/Rating';

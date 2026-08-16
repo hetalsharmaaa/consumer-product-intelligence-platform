@@ -1,11 +1,7 @@
 import { useState, useEffect } from 'react';
 import { MessageSquare, Plus } from 'lucide-react';
 
-import {
-  getReviewsByProductId,
-  getRatingStats,
-  submitReview,
-} from '../../services/reviewService';
+import { reviewService } from '../../services/api/reviewService';
 
 import { useAuth } from '../../context/AuthContext';
 import RatingBreakdown from './RatingBreakdown';
@@ -39,7 +35,7 @@ export default function ReviewsSection({ productId }) {
         productId
       );
 
-      const data = await getReviewsByProductId(productId);
+      const data = await reviewService.getReviewsByProductId(productId);
 
       console.log(
         'Reviews API response:',
@@ -90,7 +86,7 @@ export default function ReviewsSection({ productId }) {
 
   const handleReviewSubmitted = async (reviewData) => {
     try {
-      await submitReview(
+      await reviewService.submitReview(
         productId,
         reviewData
       );
@@ -126,7 +122,7 @@ export default function ReviewsSection({ productId }) {
     );
   }
 
-  const stats = getRatingStats(reviews);
+  const stats = reviewService.getRatingStats(reviews);
 
   return (
     <div className="reviews-section">

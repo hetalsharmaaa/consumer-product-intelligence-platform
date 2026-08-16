@@ -10,8 +10,8 @@ import {
 } from 'lucide-react';
 
 import { useComparison } from '../context/ComparisonContext';
-import { getProduct } from '../services/api';
-import { getCategoryColors } from '../services/mockData';
+import { productService } from '../services/api/productService';
+import { getCategoryColors } from '../utils/constants';
 
 import Button from '../components/common/Button';
 import Badge from '../components/common/Badge';
@@ -43,7 +43,7 @@ export default function ComparisonPage() {
       try {
         // Fetch each product directly from the real Django API
         const results = await Promise.all(
-          compareItems.map(id => getProduct(id))
+          compareItems.map(id => productService.getProductById(id))
         );
 
         const normalizedProducts = results.map(product => ({

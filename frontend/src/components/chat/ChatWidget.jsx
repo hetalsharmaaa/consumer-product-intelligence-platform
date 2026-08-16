@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Minus } from 'lucide-react';
 import ChatMessage from './ChatMessage';
-import { chatWithAI } from '../../services/api';
+import { aiService } from '../../services/api/aiService';
 import './ChatWidget.css';
 
 function normalizeText(value) {
@@ -90,7 +90,7 @@ export default function ChatWidget({ productId = null }) {
         .filter((message) => message.content)
         .slice(-10);
 
-      const data = await chatWithAI(
+      const data = await aiService.chatWithAI(
         question,
         productId,
         history

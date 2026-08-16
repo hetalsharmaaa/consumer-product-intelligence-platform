@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { loginUser, registerUser, getProfile } from '../services/api';
+import { authService } from '../services/api/authService';
 
 const AuthContext = createContext(null);
 const STORAGE_KEY = 'insightcart_auth';
@@ -13,7 +13,7 @@ export function AuthProvider({ children }) {
     const restore = async () => {
       if (!token) { setLoading(false); return; }
       try {
-        const profile = await getProfile();
+        const profile = await authService.getProfile();
         setUser(profile);
         localStorage.setItem(STORAGE_KEY, JSON.stringify({ user: profile, token }));
       } catch {
@@ -28,22 +28,26 @@ export function AuthProvider({ children }) {
   }, [token]);
 
   const persist = useCallback((data) => {
-    localStorage.setItem('access_token', data.access);
+    localStorage.setItem('access_token', data.access || data.token); // Handle varying backend token keys
     if (data.refresh) localStorage.setItem('refresh_token', data.refresh);
-    setToken(data.access);
+    setToken(data.access || data.token);
   }, []);
 
   const login = useCallback(async (email, password) => {
-    const data = await loginUser(email, password);
+    const data = await authService.login({ email: email.trim(), password });
     persist(data);
-    const profile = await getProfile();
+    const profile = await authService.getProfile();
     setUser(profile);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ user: profile, token: data.access }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ user: profile, token: data.access || data.token }));
     return profile;
   }, [persist]);
 
   const register = useCallback(async (name, email, password) => {
-    await registerUser(name, email, password);
+    await authService.register({
+      username: name.trim().replace(/\s+/g, '_').toLowerCase(),
+      email: email.trim(),
+      password,
+    });
     return login(email, password);
   }, [login]);
 

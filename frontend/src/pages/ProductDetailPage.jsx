@@ -10,8 +10,8 @@ import {
   Package,
 } from 'lucide-react';
 
-import { getProduct, analyzeIngredients } from '../services/api';
-import { getCategoryColors } from '../services/mockData';
+import { productService } from '../services/api/productService';
+import { getCategoryColors } from '../utils/constants';
 
 import { useComparison } from '../context/ComparisonContext';
 import { useWishlist } from '../context/WishlistContext';
@@ -48,7 +48,7 @@ export default function ProductDetailPage() {
       setLoading(true);
 
       try {
-        const data = await getProduct(id);
+        const data = await productService.getProductById(id);
 
         const normalizedProduct = {
           ...data,
