@@ -4,21 +4,32 @@ export const aiService = {
   /**
    * Send a message to the AI chatbot
    */
-  async chat(message, context = {}) {
-    return apiClient.post('/ai/chat/', { message, context });
+  async chatWithAI(question, productId = null, history = []) {
+    return apiClient.post('/ai/chat/', { question, product_id: productId, history });
   },
 
   /**
-   * Analyze an ingredient list
+   * Scan barcode from image
    */
-  async analyzeIngredients(ingredients) {
-    return apiClient.post('/ai/analyze-ingredients/', { ingredients });
+  async scanBarcodeImage(file) {
+    const form = new FormData();
+    form.append('image', file);
+    return apiClient.post('/ai/image-recognition/', form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
   },
 
   /**
-   * Get an AI verdict comparing multiple products
+   * Compare products using AI
    */
-  async compareProducts(productIds) {
-    return apiClient.post('/ai/compare/', { product_ids: productIds });
+  async aiCompareProducts(ids, priority = '') {
+    return apiClient.get('/ai/compare/', { params: { ids: ids.join(','), priority } });
+  },
+
+  /**
+   * Get Alternatives using AI
+   */
+  async getAlternatives(id, preference = '') {
+    return apiClient.get(`/ai/alternatives/${id}/`, { params: { preference } });
   }
 };
