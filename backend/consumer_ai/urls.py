@@ -58,3 +58,11 @@ urlpatterns = [
         include('ai.urls')
     ),
 ]
+
+# Catch-all route to serve React's index.html for any route not caught by API or Admin
+# This enables React Router to handle client-side routing
+from django.views.generic import TemplateView
+from django.urls import re_path
+urlpatterns += [
+    re_path(r'^.*$', TemplateView.as_view(template_name='index.html')),
+]
