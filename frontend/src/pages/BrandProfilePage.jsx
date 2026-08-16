@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Building2, ArrowLeft, Star, Package, Filter, SlidersHorizontal } from 'lucide-react';
-import { getBrands, getBrandProducts } from '../services/api';
+import { brandService } from '../services/api/brandService';
 import Card from '../components/common/Card';
 import Badge from '../components/common/Badge';
 import Rating from '../components/common/Rating';
@@ -18,10 +18,10 @@ export default function BrandProfilePage() {
   
   useEffect(() => {
     setLoading(true);
-    getBrands().then(async brands => {
+    brandService.getBrands().then(async brands => {
       const brand = brands.find(b => b.name.toLowerCase() === name.toLowerCase());
       if (!brand) { setStats(null); setProducts([]); return; }
-      const items = await getBrandProducts(brand.id);
+      const items = await brandService.getBrandProducts(brand.id);
       const prices = items.map(p => Number(p.price || 0));
       const avgRating = items.length ? items.reduce((sum,p) => sum + Number(p.rating || 0), 0) / items.length : 0;
       setStats({ name: brand.name, productCount: items.length, avgRating, priceRange: { min: prices.length ? Math.min(...prices) : 0, max: prices.length ? Math.max(...prices) : 0 }, categories: [...new Set(items.map(p => p.category).filter(Boolean))] });
