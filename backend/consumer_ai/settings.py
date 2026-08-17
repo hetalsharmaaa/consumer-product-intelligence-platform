@@ -1,14 +1,31 @@
 from pathlib import Path
+import os
+import dj_database_url
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-SECRET_KEY = 'django-insecure-change-this-in-production'
+# =========================
+# Security / Environment
+# =========================
 
-DEBUG = True
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY',
+    'django-insecure-change-this-in-production'
+)
 
-ALLOWED_HOSTS = []
+DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
+
+ALLOWED_HOSTS = os.environ.get(
+    'ALLOWED_HOSTS',
+    'localhost,127.0.0.1'
+).split(',')
+
+
+# =========================
+# Applications
+# =========================
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -29,6 +46,12 @@ INSTALLED_APPS = [
     'recommendations',
     'ai',
 ]
+
+
+# =========================
+# Middleware
+# =========================
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -40,8 +63,16 @@ MIDDLEWARE = [
 ]
 
 
+# =========================
+# URLs
+# =========================
+
 ROOT_URLCONF = 'consumer_ai.urls'
 
+
+# =========================
+# Templates
+# =========================
 
 TEMPLATES = [
     {
@@ -59,16 +90,36 @@ TEMPLATES = [
 ]
 
 
+# =========================
+# WSGI
+# =========================
+
 WSGI_APPLICATION = 'consumer_ai.wsgi.application'
 
 
+# =========================
+# Database
+# =========================
+# Local development:
+#     SQLite (db.sqlite3)
+#
+# Render production:
+#     PostgreSQL using DATABASE_URL
+#
+# If DATABASE_URL exists, PostgreSQL is used.
+# Otherwise, SQLite is used.
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,
+    )
 }
 
+
+# =========================
+# Password Validation
+# =========================
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -86,6 +137,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# =========================
+# Internationalization
+# =========================
+
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -95,19 +150,36 @@ USE_I18N = True
 USE_TZ = True
 
 
+# =========================
+# Static Files
+# =========================
+
 STATIC_URL = 'static/'
 
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+
+# =========================
+# Default Primary Key
+# =========================
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+# =========================
+# Django REST Framework
+# =========================
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-}
+
+
+# =========================
+# Production Security
+# =========================
+
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
